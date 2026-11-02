@@ -1,0 +1,20 @@
+<nav class="barra navbar">
+  <div class="container">
+
+    <a class="marca navbar-brand" routerLink="/">
+      <span class="logo">&#123; &#125;</span>
+      <span class="nombre">LibFinder<span class="dorado"> Mini</span></span>
+    </a>
+    
+    <div class="enlaces">
+
+      <a class="enlace" routerLink="/" routerLinkActive="activo"
+         [routerLinkActiveOptions]="{ exact: true }">Buscar</a>
+
+      <span class="enlace apagado">Historial</span>
+
+      <button class="boton-sesion" disabled>Iniciar sesión</button>
+    </div>
+
+  </div>
+</nav>
