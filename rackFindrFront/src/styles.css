@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --fondo: #0b0d12;
+  --superficie: #10131a;
+  --superficie-2: #161a23;
+  --borde: rgba(255, 255, 255, 0.08);
+  --borde-dorado: rgba(212, 162, 76, 0.28);
+  --texto: #ece8df;
+  --texto-suave: #9aa0ac;
+  --dorado: #d4a24c;
+  --dorado-claro: #f0c27a;
+  --degradado: linear-gradient(135deg, #d4a24c 0%, #f0c27a 100%);
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--texto);
+  min-height: 100vh;
+  background-color: var(--fondo);
+  background-image: radial-gradient(650px circle at 50% -10%, rgba(212, 162, 76, 0.14), transparent 65%);
+  background-repeat: no-repeat;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 600;
+}
+
+pre, code {
+  font-family: 'JetBrains Mono', monospace;
+}
