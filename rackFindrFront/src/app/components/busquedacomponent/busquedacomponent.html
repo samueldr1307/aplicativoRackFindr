@@ -1,1 +1,85 @@
-<p>busquedacomponent works!</p>
+<div class="logos">
+
+  <div class="medalla">
+    <div class="disco">
+      <img src="logos/npm.svg" alt="npm" class="giro"/>
+    </div>
+    <div class="sombra"></div>
+  </div>
+
+  <div class="medalla">
+    <div class="disco">
+      <img src="logos/maven.svg" alt="Maven" class="giro"/>
+    </div>
+    <div class="sombra"></div>
+  </div>
+
+</div>
+
+<h2 class="titulo">Buscar librerías</h2>
+
+<div class="selector">
+  <button
+    type="button"
+    class="opcion"
+    [class.activa]="ecosistema === 'npm'"
+    (click)="elegir('npm')"
+  >
+    <img src="logos/npm.svg" alt="npm" width="18" height="18" class="icono"/>
+    npm (Angular)
+  </button>
+
+  <button
+    type="button"
+    class="opcion"
+    [class.activa]="ecosistema === 'maven'"
+    (click)="elegir('maven')"
+  >
+    <img src="logos/maven.svg" alt="Maven" width="18" height="18" class="icono"/>
+    Maven (Spring Boot)
+  </button>
+</div>
+
+<div class="buscador">
+  <input
+    type="text"
+    class="campo"
+    placeholder="Ej: librerías de animaciones"
+    [(ngModel)]="consulta"
+    (keyup.enter)="buscar()"
+  />
+  <button class="boton-buscar" (click)="buscar()" [disabled]="cargando">Buscar</button>
+</div>
+
+@if (cargando) {
+  <div class="cargando">
+    <div class="rueda"></div>
+    <span>Buscando librerías...</span>
+  </div>
+}
+
+@if (error) {
+  <div class="error">
+    <span>{{ error }}</span>
+    <button class="boton-reintentar" (click)="buscar()">Reintentar</button>
+  </div>
+}
+
+@if (buscado && resultados.length === 0) {
+  <div class="vacio">No se encontraron librerías.</div>
+}
+
+@for (r of resultados; track r.nombre) {
+  <div class="tarjeta">
+    <div class="cuerpo">
+      <h5 class="nombre">{{ r.nombre }}</h5>
+      <p class="descripcion">{{ r.descripcion }}</p>
+
+      <p class="subtitulo">Instalación</p>
+      <pre class="codigo"><code>{{ r.instalacion }}</code></pre>
+
+      <p class="subtitulo">Ejemplo de uso</p>
+      <pre class="codigo"><code>{{ r.ejemplo }}</code></pre>
+    </div>
+  </div>
+}
