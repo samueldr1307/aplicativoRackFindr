@@ -22,7 +22,6 @@ import com.google.gson.JsonParser;
 
 import co.edu.unbosque.rackFindrBack.dto.ResultadoDTO;
 
-
 public class ExternalHTTPRequestHandler {
 
 	private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2)
@@ -47,26 +46,6 @@ public class ExternalHTTPRequestHandler {
 		System.out.println("status code -> " + response.statusCode());
 
 		String uglyJson = response.body();
-		return prettyPrintUsingGson(uglyJson);
-	}
-
-	public static String doGetAndParse(String url) {
-		HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(url))
-				.header("Content-Type", "application/json").build();
-
-		HttpResponse<String> response = null;
-		try {
-			response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		System.out.println("status code -> " + response.statusCode());
-
-		String uglyJson = response.body();
-
 		return prettyPrintUsingGson(uglyJson);
 	}
 
@@ -107,7 +86,8 @@ public class ExternalHTTPRequestHandler {
 
 	public static String doDelete(String url) {
 		HttpRequest request = HttpRequest.newBuilder().DELETE().uri(URI.create(url))
-				.setHeader("User-Agent", "Java 11 HttpClient Bot").header("Content-Type", "application/json").build();
+				.setHeader("User-Agent", "Java 11 HttpClient Bot")
+				.header("Content-Type", "application/json").build();
 
 		HttpResponse<String> response = null;
 		try {
@@ -147,13 +127,17 @@ public class ExternalHTTPRequestHandler {
 				String url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key="
 						+ apiKey;
 				String body = "{\"contents\":[{\"parts\":[{\"text\":\"" + promptCompleto.replace("\"", "'") + "\"}]}]}";
-				HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(body))
-						.uri(URI.create(url)).header("Content-Type", "application/json").build();
+				HttpRequest request = HttpRequest.newBuilder()
+						.POST(HttpRequest.BodyPublishers.ofString(body))
+						.uri(URI.create(url))
+						.header("Content-Type", "application/json")
+						.build();
 				HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 				if (response.statusCode() == 200) {
 					JsonObject root = JsonParser.parseString(response.body()).getAsJsonObject();
-					String text = root.getAsJsonArray("candidates").get(0).getAsJsonObject().getAsJsonObject("content")
-							.getAsJsonArray("parts").get(0).getAsJsonObject().get("text").getAsString();
+					String text = root.getAsJsonArray("candidates").get(0).getAsJsonObject()
+							.getAsJsonObject("content").getAsJsonArray("parts").get(0).getAsJsonObject()
+							.get("text").getAsString();
 					List<ResultadoDTO> res = parsearLista(text, "Gemini");
 					if (!res.isEmpty()) {
 						return res;
@@ -172,14 +156,17 @@ public class ExternalHTTPRequestHandler {
 				String url = "https://api.openai.com/v1/chat/completions";
 				String body = "{\"model\":\"gpt-4o-mini\",\"messages\":[{\"role\":\"user\",\"content\":\""
 						+ promptCompleto.replace("\"", "'") + "\"}]}";
-				HttpRequest request = HttpRequest.newBuilder().POST(HttpRequest.BodyPublishers.ofString(body))
-						.uri(URI.create(url)).header("Content-Type", "application/json")
-						.header("Authorization", "Bearer " + apiKey).build();
+				HttpRequest request = HttpRequest.newBuilder()
+						.POST(HttpRequest.BodyPublishers.ofString(body))
+						.uri(URI.create(url))
+						.header("Content-Type", "application/json")
+						.header("Authorization", "Bearer " + apiKey)
+						.build();
 				HttpResponse<String> response = HTTP_CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 				if (response.statusCode() == 200) {
 					JsonObject root = JsonParser.parseString(response.body()).getAsJsonObject();
-					String text = root.getAsJsonArray("choices").get(0).getAsJsonObject().getAsJsonObject("message")
-							.get("content").getAsString();
+					String text = root.getAsJsonArray("choices").get(0).getAsJsonObject()
+							.getAsJsonObject("message").get("content").getAsString();
 					List<ResultadoDTO> res = parsearLista(text, "OpenAI");
 					if (!res.isEmpty()) {
 						return res;
@@ -238,35 +225,41 @@ public class ExternalHTTPRequestHandler {
 		List<ResultadoDTO> lista = new ArrayList<>();
 		if ("maven".equalsIgnoreCase(ecosistema)) {
 			if (num == 1) {
-				lista.add(new ResultadoDTO("Spring Boot Starter Validation", "Valida los datos que llegan al backend.",
+				lista.add(new ResultadoDTO("Spring Boot Starter Validation",
+						"Valida los datos que llegan al backend.",
 						"<dependency>\n  <groupId>org.springframework.boot</groupId>\n  <artifactId>spring-boot-starter-validation</artifactId>\n</dependency>",
 						"Agrega anotaciones como @NotBlank a los campos de tu clase y @Valid al parametro del controlador.",
 						"@NotBlank private String nombre;", iaOrigen));
 			} else if (num == 2) {
-				lista.add(new ResultadoDTO("Lombok", "Reduce el codigo repetitivo de las clases Java.",
+				lista.add(new ResultadoDTO("Lombok",
+						"Reduce el codigo repetitivo de las clases Java.",
 						"<dependency>\n  <groupId>org.projectlombok</groupId>\n  <artifactId>lombok</artifactId>\n</dependency>",
 						"Escribe @Data encima de la clase y Lombok genera los getters, setters y constructores por ti.",
 						"@Data public class Usuario { private String nombre; }", iaOrigen));
 			} else {
-				lista.add(new ResultadoDTO("ModelMapper", "Convierte facilmente entre entidades y DTOs en Spring Boot.",
+				lista.add(new ResultadoDTO("ModelMapper",
+						"Convierte facilmente entre entidades y DTOs en Spring Boot.",
 						"<dependency>\n  <groupId>org.modelmapper</groupId>\n  <artifactId>modelmapper</artifactId>\n  <version>3.1.1</version>\n</dependency>",
 						"Crea un Bean de ModelMapper e inyectalo en el servicio para mapear objetos.",
 						"UserDTO dto = modelMapper.map(entity, UserDTO.class);", iaOrigen));
 			}
 		} else {
 			if (num == 1) {
-				lista.add(new ResultadoDTO("GSAP", "Libreria potente para animar cualquier elemento.",
+				lista.add(new ResultadoDTO("GSAP",
+						"Libreria potente para animar cualquier elemento.",
 						"npm install gsap",
 						"Importa gsap en tu componente y llama a gsap.to() indicando el elemento y la animacion.",
 						"gsap.to('.caja', { x: 100, duration: 1 });", iaOrigen));
 			} else if (num == 2) {
-				lista.add(new ResultadoDTO("@angular/animations", "Animaciones integradas en Angular.",
+				lista.add(new ResultadoDTO("@angular/animations",
+						"Animaciones integradas en Angular.",
 						"npm install @angular/animations",
 						"Define un trigger con sus estados dentro del decorador @Component y asocialo a un elemento del HTML.",
 						"trigger('abrir', [state('cerrado', style({ height: 0 }))])", iaOrigen));
 			} else {
 				lista.add(new ResultadoDTO("SweetAlert2",
-						"Muestra alertas y modales personalizados en aplicaciones web.", "npm install sweetalert2",
+						"Muestra alertas y modales personalizados en aplicaciones web.",
+						"npm install sweetalert2",
 						"Importa Swal desde sweetalert2 y llama al metodo Swal.fire() con el mensaje.",
 						"Swal.fire('Exito', 'Operacion realizada', 'success');", iaOrigen));
 			}

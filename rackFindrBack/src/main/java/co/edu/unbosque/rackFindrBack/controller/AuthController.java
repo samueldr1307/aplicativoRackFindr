@@ -3,18 +3,19 @@ package co.edu.unbosque.rackFindrBack.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unbosque.rackFindrBack.dto.AuditoriaSesionDTO;
 import co.edu.unbosque.rackFindrBack.dto.UserDTO;
 import co.edu.unbosque.rackFindrBack.model.User;
 import co.edu.unbosque.rackFindrBack.security.JwtUtil;
@@ -27,7 +28,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "http://localhost:8081", "*" })
-@Tag(name = "Autenticación", description = "API para autenticación de usuarios (login y registro)")
+@Tag(name = "Autenticación", description = "API para autenticación de usuarios (login, registro, confirmación de cuenta y recuperación)")
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;
@@ -64,15 +65,18 @@ public class AuthController {
 				role = user.getRole().name();
 			}
 
-			AuditoriaSesionDTO auditoria = auditoriaService.registrarAuditoriaLogin(
+			auditoriaService.registrarAuditoriaLogin(
 					userDetails.getUsername(), role != null ? role : "USER", ipCliente, loginRequest.getCoordenadas(),
 					true, "Inicio de sesion exitoso");
 
-			String fechaStr = auditoria.getFecha() != null ? auditoria.getFecha().toString() : "";
-			userService.generarYEnviarConfirmacionLogin(userDetails.getUsername(), fechaStr, auditoria.getIp(),
-					auditoria.getCoordenadas(), auditoria.getCiudad(), auditoria.getPais());
-
 			return ResponseEntity.ok(new AuthResponse(jwt, role));
+		} catch (DisabledException e) {
+			auditoriaService.registrarAccion(
+					loginRequest.getUsername() != null ? loginRequest.getUsername() : "desconocido", "USER",
+					"LOGIN_CUENTA_NO_CONFIRMADA", "Intento de login sin confirmar correo", ipCliente,
+					loginRequest.getCoordenadas(), false);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN)
+					.body("Debes confirmar tu cuenta por correo antes de iniciar sesion");
 		} catch (AuthenticationException e) {
 			e.printStackTrace();
 			auditoriaService.registrarAuditoriaLogin(
@@ -83,39 +87,64 @@ public class AuthController {
 		}
 	}
 
-	@Operation(summary = "Registrar un nuevo usuario")
+	@Operation(summary = "Registrar un nuevo usuario y enviar enlace de confirmación al correo")
 	@PostMapping("/register")
-	public ResponseEntity<?> register(@RequestBody UserDTO registerRequest) {
+	public ResponseEntity<?> register(@RequestBody UserDTO registerRequest, HttpServletRequest request) {
 		if (userService.findUsernameAlreadyTaken(registerRequest.getUsername())) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("El nombre de usuario ya existe");
 		}
 
-		int result = userService.create(registerRequest);
+		int result = userService.registrarUsuarioConConfirmacion(registerRequest);
 		if (result == 0) {
-			return ResponseEntity.status(HttpStatus.CREATED).body("Usuario registrado exitosamente");
+			String ip = request != null ? request.getRemoteAddr() : "127.0.0.1";
+			auditoriaService.registrarAccion(registerRequest.getUsername(), "USER", "REGISTRO_USUARIO",
+					"Usuario registrado pendiente de confirmacion por correo", ip, registerRequest.getCoordenadas(),
+					true);
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body("Usuario registrado exitosamente. Revisa tu correo para confirmar y activar tu cuenta.");
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al registrar el usuario");
 		}
 	}
 
-	@Operation(summary = "Confirmar inicio de sesión con código enviado al correo")
-	@PostMapping("/confirmar-login")
-	public ResponseEntity<String> confirmarLogin(@RequestParam String username, @RequestParam String codigo) {
-		boolean confirmado = userService.confirmarCodigoInicioSesion(username, codigo);
+	@Operation(summary = "Confirmar y activar cuenta mediante enlace enviado al correo")
+	@GetMapping("/confirmar-cuenta")
+	public ResponseEntity<String> confirmarCuentaEnlace(@RequestParam String username, @RequestParam String codigo,
+			HttpServletRequest request) {
+		return procesarConfirmacionCuenta(username, codigo, request);
+	}
+
+	@Operation(summary = "Confirmar y activar cuenta mediante código")
+	@PostMapping("/confirmar-cuenta")
+	public ResponseEntity<String> confirmarCuentaPost(@RequestParam String username, @RequestParam String codigo,
+			HttpServletRequest request) {
+		return procesarConfirmacionCuenta(username, codigo, request);
+	}
+
+	private ResponseEntity<String> procesarConfirmacionCuenta(String username, String codigo,
+			HttpServletRequest request) {
+		boolean confirmado = userService.confirmarCuentaPorCorreo(username, codigo);
+		String ip = request != null ? request.getRemoteAddr() : "127.0.0.1";
 		if (confirmado) {
-			auditoriaService.marcarUltimaSesionConfirmadaPorCorreo(username);
-			return new ResponseEntity<>("Inicio de sesion confirmado exitosamente", HttpStatus.OK);
+			auditoriaService.registrarAccion(username, "USER", "CONFIRMACION_CUENTA",
+					"Cuenta confirmada y activada por correo", ip, null, true);
+			return new ResponseEntity<>("Cuenta confirmada y activada exitosamente. Ya puedes iniciar sesion.",
+					HttpStatus.OK);
 		} else {
-			return new ResponseEntity<>("Codigo invalido o expirado", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Codigo o enlace de confirmacion invalido", HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	@Operation(summary = "Solicitar código de recuperación de contraseña al correo")
+	@Operation(summary = "Solicitar enlace de recuperación de contraseña al correo")
 	@PostMapping("/recuperar-contrasena")
-	public ResponseEntity<String> recuperarContrasena(@RequestParam String usernameOrEmail) {
+	public ResponseEntity<String> recuperarContrasena(@RequestParam String usernameOrEmail,
+			HttpServletRequest request) {
 		int status = userService.solicitarRecuperacionContrasena(usernameOrEmail);
+		String ip = request != null ? request.getRemoteAddr() : "127.0.0.1";
 		if (status == 0) {
-			return new ResponseEntity<>("Codigo de recuperacion enviado al correo", HttpStatus.OK);
+			auditoriaService.registrarAccion(usernameOrEmail, "USER", "SOLICITUD_RECUPERACION_CONTRASENA",
+					"Enlace de recuperacion enviado al correo", ip, null, true);
+			return new ResponseEntity<>("Enlace de recuperacion enviado al correo", HttpStatus.OK);
 		} else if (status == 1) {
 			return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
 		} else {
@@ -123,17 +152,20 @@ public class AuthController {
 		}
 	}
 
-	@Operation(summary = "Restablecer contraseña con código de recuperación")
+	@Operation(summary = "Restablecer contraseña mediante enlace recibido por correo")
 	@PostMapping("/restablecer-contrasena")
 	public ResponseEntity<String> restablecerContrasena(@RequestParam String usernameOrEmail,
-			@RequestParam String codigo, @RequestParam String nuevaPassword) {
+			@RequestParam String codigo, @RequestParam String nuevaPassword, HttpServletRequest request) {
 		int status = userService.restablecerContrasenaConCodigo(usernameOrEmail, codigo, nuevaPassword);
+		String ip = request != null ? request.getRemoteAddr() : "127.0.0.1";
 		if (status == 0) {
+			auditoriaService.registrarAccion(usernameOrEmail, "USER", "RESTABLECER_CONTRASENA",
+					"Contrasena restablecida exitosamente", ip, null, true);
 			return new ResponseEntity<>("Contrasena actualizada exitosamente", HttpStatus.OK);
 		} else if (status == 1) {
 			return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
 		} else {
-			return new ResponseEntity<>("Codigo de recuperacion invalido", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Codigo o enlace de recuperacion invalido", HttpStatus.BAD_REQUEST);
 		}
 	}
 
