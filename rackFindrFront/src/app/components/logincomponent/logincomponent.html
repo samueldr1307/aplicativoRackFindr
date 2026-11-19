@@ -1,0 +1,28 @@
+<section class="login">
+  <h1>Iniciar Sesión</h1>
+
+  <form (ngSubmit)="ingresar()">
+    <label for="username">Usuario</label>
+    <input
+      id="username"
+      name="username"
+      type="text"
+      autocomplete="username"
+      [(ngModel)]="username"
+    />
+
+<label for="password">Contraseña</label>
+<input
+  id="password"
+  name="password"
+  type="password"
+  autocomplete="current-password"
+  [(ngModel)]="password"
+  />
+<button type="submit" [disabled]="cargando">
+  {{ cargando ? 'Ingresando...' : 'Iniciar sesión' }}
+</button>
+</form>
+
+<p aria-live="polite">{{ mensaje}}</p>
+</section>
