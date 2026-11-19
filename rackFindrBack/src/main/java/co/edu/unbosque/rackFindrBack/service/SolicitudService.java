@@ -52,7 +52,7 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 
 	@Override
 	public boolean exist(Long id) {
-		return solicitudRepo.existsById(id);
+		return solicitudRepo.existsById(id) ? true : false;
 	}
 
 	@Override
@@ -68,10 +68,9 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 		String ecosistema = (data.getEcosistema() != null && data.getEcosistema().equalsIgnoreCase("maven")) ? "maven"
 				: "npm";
 		String promptCliente = data.getPrompt();
-		String promptBase = ExternalHTTPRequestHandler.PROMPT_BASE;
 
-		List<ResultadoDTO> recomendaciones = ExternalHTTPRequestHandler.consultarTresIAs(ecosistema, promptCliente,
-				geminiApiKey, openaiApiKey, groqApiKey);
+		List<ResultadoDTO> recomendaciones = ExternalHTTPRequestHandler.consultarTresIAs(
+				ecosistema, promptCliente, geminiApiKey, openaiApiKey, groqApiKey);
 
 		String contenidoJson = gson.toJson(recomendaciones);
 
@@ -79,7 +78,6 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 		entity.setFecha(LocalDateTime.now());
 		entity.setEcosistema(ecosistema);
 		entity.setPrompt(AESUtil.encrypt(promptCliente));
-		entity.setPromptBase(AESUtil.encrypt(promptBase));
 		entity.setContenido(AESUtil.encrypt(contenidoJson));
 		entity.setIaUsada("Gemini, OpenAI, Llama");
 
@@ -148,6 +146,11 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 		}
 	}
 
+	public byte[] exportarSolicitudIndividualPdf(Long id) {
+		SolicitudDTO sol = getById(id);
+		return PdfGeneratorUtil.generarSolicitudIndividualPdf(sol);
+	}
+
 	public byte[] exportarHistorialUsuarioPdf(String username) {
 		List<SolicitudDTO> historial = getByUsername(username);
 		String email = "";
@@ -168,8 +171,6 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 		dto.setPrompt(plainPrompt);
 		dto.setConsulta(plainPrompt);
 
-		dto.setPromptBase(AESUtil.decrypt(entity.getPromptBase()));
-
 		String plainContenido = AESUtil.decrypt(entity.getContenido());
 		dto.setContenido(plainContenido);
 		dto.setIaUsada(entity.getIaUsada());
@@ -180,8 +181,9 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 
 		try {
 			if (plainContenido != null && plainContenido.trim().startsWith("[")) {
-				List<ResultadoDTO> parsed = gson.fromJson(plainContenido, new TypeToken<List<ResultadoDTO>>() {
-				}.getType());
+				List<ResultadoDTO> parsed = gson.fromJson(plainContenido,
+						new TypeToken<List<ResultadoDTO>>() {
+						}.getType());
 				if (parsed != null) {
 					dto.setResultados(parsed);
 				}

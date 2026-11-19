@@ -16,7 +16,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-
 public class AESUtil {
 
 	private final static String ALGORITMO = "AES";

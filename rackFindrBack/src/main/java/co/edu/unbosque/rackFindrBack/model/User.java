@@ -20,13 +20,10 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "useraccount")
-public class User implements UserDetails{
+public class User implements UserDetails {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 
 	@Column(unique = true)
@@ -77,7 +74,7 @@ public class User implements UserDetails{
 	public enum Role {
 		USER, ADMIN
 	}
-	
+
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
@@ -207,7 +204,5 @@ public class User implements UserDetails{
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + "]";
 	}
-
-
 
 }

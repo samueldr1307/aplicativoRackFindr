@@ -3,7 +3,7 @@ package co.edu.unbosque.rackFindrBack.dto;
 import java.util.Objects;
 
 public class ResultadoDTO {
-	
+
 	private String nombre;
 	private String descripcion;
 	private String instalacion;
@@ -92,6 +92,5 @@ public class ResultadoDTO {
 		return "ResultadoDTO [nombre=" + nombre + ", descripcion=" + descripcion + ", instalacion=" + instalacion
 				+ ", comoUsar=" + comoUsar + ", ejemplo=" + ejemplo + ", iaOrigen=" + iaOrigen + "]";
 	}
-
 
 }

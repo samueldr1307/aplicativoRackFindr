@@ -3,9 +3,11 @@ package co.edu.unbosque.rackFindrBack.dto;
 import java.time.LocalDateTime;
 
 public class AuditoriaSesionDTO {
+
 	private Long id;
 	private String username;
 	private String rol;
+	private String accion;
 	private LocalDateTime fecha;
 	private String ip;
 	private String coordenadas;
@@ -19,10 +21,11 @@ public class AuditoriaSesionDTO {
 		this.fecha = LocalDateTime.now();
 	}
 
-	public AuditoriaSesionDTO(String username, String rol, LocalDateTime fecha, String ip, String coordenadas,
-			String ciudad, String pais, boolean exitoso, boolean confirmadoCorreo, String detalle) {
+	public AuditoriaSesionDTO(String username, String rol, String accion, LocalDateTime fecha, String ip,
+			String coordenadas, String ciudad, String pais, boolean exitoso, boolean confirmadoCorreo, String detalle) {
 		this.username = username;
 		this.rol = rol;
+		this.accion = accion;
 		this.fecha = fecha != null ? fecha : LocalDateTime.now();
 		this.ip = ip;
 		this.coordenadas = coordenadas;
@@ -55,6 +58,14 @@ public class AuditoriaSesionDTO {
 
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
 	}
 
 	public LocalDateTime getFecha() {
@@ -121,7 +132,4 @@ public class AuditoriaSesionDTO {
 		this.detalle = detalle;
 	}
 
-
-
-	
 }

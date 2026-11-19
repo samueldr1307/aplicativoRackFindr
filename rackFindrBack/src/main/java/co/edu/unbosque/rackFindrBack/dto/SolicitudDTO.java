@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SolicitudDTO {
-	
+
 	private Long id;
 	private LocalDateTime fecha;
 	private String ecosistema;
@@ -126,8 +126,5 @@ public class SolicitudDTO {
 		return "SolicitudDTO [id=" + id + ", fecha=" + fecha + ", ecosistema=" + ecosistema + ", prompt=" + getPrompt()
 				+ ", iaUsada=" + iaUsada + ", username=" + username + "]";
 	}
-
-	
-	
 
 }

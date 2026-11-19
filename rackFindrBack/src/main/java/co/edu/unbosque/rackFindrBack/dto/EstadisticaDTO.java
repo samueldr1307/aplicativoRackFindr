@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 
 public class EstadisticaDTO {
-	
 
 	private long totalUsuarios;
 	private long totalAdministradores;
 	private long totalUsuariosEstandar;
+	private long usuariosActivos;
+	private long usuariosInactivos;
 	private long totalSolicitudes;
 	private long solicitudesNpm;
 	private long solicitudesMaven;
@@ -17,6 +18,7 @@ public class EstadisticaDTO {
 	private long iniciosSesionFallidos;
 	private Map<String, Long> solicitudesPorUsuario;
 	private Map<String, Long> solicitudesPorIa;
+	private Map<String, Long> accionesAuditoria;
 	private List<AuditoriaSesionDTO> ultimasAuditorias;
 
 	public EstadisticaDTO() {
@@ -44,6 +46,22 @@ public class EstadisticaDTO {
 
 	public void setTotalUsuariosEstandar(long totalUsuariosEstandar) {
 		this.totalUsuariosEstandar = totalUsuariosEstandar;
+	}
+
+	public long getUsuariosActivos() {
+		return usuariosActivos;
+	}
+
+	public void setUsuariosActivos(long usuariosActivos) {
+		this.usuariosActivos = usuariosActivos;
+	}
+
+	public long getUsuariosInactivos() {
+		return usuariosInactivos;
+	}
+
+	public void setUsuariosInactivos(long usuariosInactivos) {
+		this.usuariosInactivos = usuariosInactivos;
 	}
 
 	public long getTotalSolicitudes() {
@@ -110,6 +128,14 @@ public class EstadisticaDTO {
 		this.solicitudesPorIa = solicitudesPorIa;
 	}
 
+	public Map<String, Long> getAccionesAuditoria() {
+		return accionesAuditoria;
+	}
+
+	public void setAccionesAuditoria(Map<String, Long> accionesAuditoria) {
+		this.accionesAuditoria = accionesAuditoria;
+	}
+
 	public List<AuditoriaSesionDTO> getUltimasAuditorias() {
 		return ultimasAuditorias;
 	}
@@ -117,7 +143,5 @@ public class EstadisticaDTO {
 	public void setUltimasAuditorias(List<AuditoriaSesionDTO> ultimasAuditorias) {
 		this.ultimasAuditorias = ultimasAuditorias;
 	}
-
-	
 
 }

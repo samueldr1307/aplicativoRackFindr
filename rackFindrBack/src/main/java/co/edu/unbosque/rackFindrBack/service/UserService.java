@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.rackFindrBack.dto.UserDTO;
 import co.edu.unbosque.rackFindrBack.model.User;
+import co.edu.unbosque.rackFindrBack.repository.SolicitudRepository;
 import co.edu.unbosque.rackFindrBack.repository.UserRepository;
 import co.edu.unbosque.rackFindrBack.util.AESUtil;
 import co.edu.unbosque.rackFindrBack.util.EmailSender;
@@ -22,6 +23,9 @@ public class UserService implements CRUDOperation<UserDTO> {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	private SolicitudRepository solicitudRepo;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -42,7 +46,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 
 	@Override
 	public boolean exist(Long id) {
-		return userRepo.existsById(id);
+		return userRepo.existsById(id) ? true : false;
 	}
 
 	@Override
@@ -60,11 +64,73 @@ public class UserService implements CRUDOperation<UserDTO> {
 				entity.setEmail(AESUtil.encrypt(plainEmail));
 			}
 			userRepo.save(entity);
-			if (plainEmail != null && !plainEmail.isEmpty()) {
-				emailSender.enviarBienvenidaRegistro(plainEmail, entity.getUsername());
-			}
 			return 0;
 		}
+	}
+
+	public int registrarUsuarioConConfirmacion(UserDTO data) {
+		User entity = modelMapper.map(data, User.class);
+		if (findUsernameAlreadyTaken(entity)) {
+			return 1;
+		}
+		entity.setPassword(passwordEncoder.encode(entity.getPassword()));
+		if (data.getRole() != null) {
+			entity.setRole(data.getRole());
+		} else {
+			entity.setRole(User.Role.USER);
+		}
+
+		entity.setEnabled(false);
+
+		int numero = 100000 + new Random().nextInt(900000);
+		String codigo = String.valueOf(numero);
+		entity.setCodigoVerificacion(AESUtil.encrypt(codigo));
+		entity.setFechaExpiracionCodigo(LocalDateTime.now().plusMinutes(30));
+
+		String plainEmail = data.getEmail();
+		if (plainEmail != null && !plainEmail.isEmpty()) {
+			entity.setEmail(AESUtil.encrypt(plainEmail));
+		}
+
+		userRepo.save(entity);
+
+		if (plainEmail != null && !plainEmail.isEmpty()) {
+			emailSender.enviarConfirmacionRegistro(plainEmail, entity.getUsername(), codigo);
+		}
+		return 0;
+	}
+
+	public boolean confirmarCuentaPorCorreo(String username, String codigo) {
+		if (username == null || codigo == null) {
+			return false;
+		}
+		Optional<User> userOpt = userRepo.findByUsername(username);
+		if (!userOpt.isPresent()) {
+			return false;
+		}
+		User user = userOpt.get();
+		if (user.getCodigoVerificacion() == null) {
+			return user.isEnabled();
+		}
+		String storedCode = AESUtil.decrypt(user.getCodigoVerificacion());
+		if (codigo.trim().equals(storedCode)) {
+			user.setEnabled(true);
+			user.setCodigoVerificacion(null);
+			userRepo.save(user);
+			return true;
+		}
+		return false;
+	}
+
+	public int cambiarEstadoUsuario(Long id, boolean activo) {
+		Optional<User> found = userRepo.findById(id);
+		if (found.isPresent()) {
+			User user = found.get();
+			user.setEnabled(activo);
+			userRepo.save(user);
+			return 0;
+		}
+		return 1;
 	}
 
 	@Override
@@ -76,6 +142,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 			if (entity.getEmail() != null) {
 				dto.setEmail(AESUtil.decrypt(entity.getEmail()));
 			}
+			dto.setEnabled(entity.isEnabled());
 			dtoList.add(dto);
 		});
 
@@ -86,6 +153,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 	public int deleteById(Long id) {
 		Optional<User> found = userRepo.findById(id);
 		if (found.isPresent()) {
+			solicitudRepo.deleteByUsername(found.get().getUsername());
 			userRepo.delete(found.get());
 			return 0;
 		} else {
@@ -96,6 +164,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 	public int deleteByUsername(String username) {
 		Optional<User> found = userRepo.findByUsername(username);
 		if (found.isPresent()) {
+			solicitudRepo.deleteByUsername(username);
 			userRepo.delete(found.get());
 			return 0;
 		} else {
@@ -106,29 +175,31 @@ public class UserService implements CRUDOperation<UserDTO> {
 	@Override
 	public int updateById(Long id, UserDTO newData) {
 		Optional<User> found = userRepo.findById(id);
-		Optional<User> newFound = userRepo.findByUsername(newData.getUsername());
-
-		if (found.isPresent() && !newFound.isPresent()) {
-			User temp = found.get();
-			temp.setUsername(newData.getUsername());
-			temp.setPassword(passwordEncoder.encode(newData.getPassword()));
-			if (newData.getRole() != null) {
-				temp.setRole(newData.getRole());
-			}
-			if (newData.getEmail() != null && !newData.getEmail().isEmpty()) {
-				temp.setEmail(AESUtil.encrypt(newData.getEmail()));
-			}
-			userRepo.save(temp);
-			return 0;
-		}
-		if (found.isPresent() && newFound.isPresent()) {
-			return 1;
-		}
 		if (!found.isPresent()) {
 			return 2;
-		} else {
-			return 3;
 		}
+
+		Optional<User> newFound = userRepo.findByUsername(newData.getUsername());
+		if (newFound.isPresent() && !newFound.get().getId().equals(id)) {
+			return 1;
+		}
+
+		User temp = found.get();
+		if (newData.getUsername() != null && !newData.getUsername().isEmpty()) {
+			temp.setUsername(newData.getUsername());
+		}
+		if (newData.getPassword() != null && !newData.getPassword().isEmpty()) {
+			temp.setPassword(passwordEncoder.encode(newData.getPassword()));
+		}
+		if (newData.getRole() != null) {
+			temp.setRole(newData.getRole());
+		}
+		if (newData.getEmail() != null && !newData.getEmail().isEmpty()) {
+			temp.setEmail(AESUtil.encrypt(newData.getEmail()));
+		}
+		temp.setEnabled(newData.isEnabled());
+		userRepo.save(temp);
+		return 0;
 	}
 
 	public UserDTO getById(Long id) {
@@ -138,14 +209,11 @@ public class UserService implements CRUDOperation<UserDTO> {
 			if (found.get().getEmail() != null) {
 				dto.setEmail(AESUtil.decrypt(found.get().getEmail()));
 			}
+			dto.setEnabled(found.get().isEnabled());
 			return dto;
 		} else {
 			return null;
 		}
-	}
-
-	public Optional<User> getEntityByUsername(String username) {
-		return userRepo.findByUsername(username);
 	}
 
 	public boolean findUsernameAlreadyTaken(User newUser) {
@@ -160,58 +228,6 @@ public class UserService implements CRUDOperation<UserDTO> {
 	public boolean findUsernameAlreadyTaken(String username) {
 		Optional<User> found = userRepo.findByUsername(username);
 		return found.isPresent();
-	}
-
-	public int validateCredentials(String username, String password) {
-		Optional<User> userOpt = userRepo.findByUsername(username);
-
-		if (userOpt.isPresent()) {
-			User user = userOpt.get();
-			if (passwordEncoder.matches(password, user.getPassword())) {
-				return 0;
-			}
-		}
-
-		return 1;
-	}
-
-	public String generarYEnviarConfirmacionLogin(String username, String fechaStr, String ip, String coordenadas,
-			String ciudad, String pais) {
-		Optional<User> userOpt = userRepo.findByUsername(username);
-		if (!userOpt.isPresent()) {
-			return null;
-		}
-		User user = userOpt.get();
-		int numero = 100000 + new Random().nextInt(900000);
-		String codigo = String.valueOf(numero);
-		user.setCodigoVerificacion(AESUtil.encrypt(codigo));
-		user.setFechaExpiracionCodigo(LocalDateTime.now().plusMinutes(15));
-		userRepo.save(user);
-
-		String plainEmail = user.getEmail() != null ? AESUtil.decrypt(user.getEmail()) : null;
-		if (plainEmail != null && !plainEmail.isEmpty()) {
-			emailSender.enviarConfirmacionInicioSesion(plainEmail, username, fechaStr, ip, coordenadas, ciudad, pais,
-					codigo);
-		}
-		return codigo;
-	}
-
-	public boolean confirmarCodigoInicioSesion(String username, String codigo) {
-		if (username == null || codigo == null) {
-			return false;
-		}
-		Optional<User> userOpt = userRepo.findByUsername(username);
-		if (!userOpt.isPresent() || userOpt.get().getCodigoVerificacion() == null) {
-			return false;
-		}
-		User user = userOpt.get();
-		String storedCode = AESUtil.decrypt(user.getCodigoVerificacion());
-		if (codigo.trim().equals(storedCode)) {
-			user.setCodigoVerificacion(null);
-			userRepo.save(user);
-			return true;
-		}
-		return false;
 	}
 
 	public int solicitarRecuperacionContrasena(String usernameOrEmail) {

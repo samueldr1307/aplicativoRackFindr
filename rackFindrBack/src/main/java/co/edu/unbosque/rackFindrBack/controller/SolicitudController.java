@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unbosque.rackFindrBack.dto.ResultadoDTO;
 import co.edu.unbosque.rackFindrBack.dto.SolicitudDTO;
+import co.edu.unbosque.rackFindrBack.service.AuditoriaSesionService;
 import co.edu.unbosque.rackFindrBack.service.SolicitudService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/solicitud")
@@ -38,39 +40,62 @@ public class SolicitudController {
 	@Autowired
 	private SolicitudService solicitudServ;
 
+	@Autowired
+	private AuditoriaSesionService auditoriaServ;
+
 	public SolicitudController() {
 	}
 
 	@Operation(summary = "Buscar librerías de NPM o Maven usando las 3 IAs públicas")
 	@PostMapping(path = "/buscar", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ResultadoDTO>> buscarLibrerias(@RequestBody SolicitudDTO request) {
-		if (request.getPrompt() == null || request.getPrompt().isBlank()) {
+	public ResponseEntity<List<ResultadoDTO>> buscarLibrerias(@RequestBody SolicitudDTO request,
+			HttpServletRequest httpRequest) {
+		if (request.getPrompt() == null || request.getPrompt().isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		request.setUsername(obtenerUsuarioAutenticado(request.getUsername()));
+		String usuario = obtenerUsuarioAutenticado(request.getUsername());
+		request.setUsername(usuario);
 		SolicitudDTO procesada = solicitudServ.procesarYGuardarSolicitud(request);
+
+		String ip = httpRequest != null ? httpRequest.getRemoteAddr() : "127.0.0.1";
+		auditoriaServ.registrarAccion(usuario, "USER", "BUSQUEDA_LIBRERIAS",
+				"Ecosistema: " + procesada.getEcosistema() + " | Prompt: " + procesada.getPrompt(), ip, null, true);
+
 		return ResponseEntity.ok(procesada.getResultados());
 	}
 
-	@Operation(summary = "Recomendar librerías por parámetros y retornar la solicitud completa")
+	@Operation(summary = "Recomendar librerías por parámetros y retornar la solicitud completa con las 3 respuestas")
 	@PostMapping(path = "/recomendar")
 	public ResponseEntity<SolicitudDTO> recomendarPorParametros(
 			@RequestParam(defaultValue = "npm") String ecosistema,
-			@RequestParam String prompt) {
+			@RequestParam String prompt,
+			HttpServletRequest httpRequest) {
 		String username = obtenerUsuarioAutenticado(null);
 		SolicitudDTO dto = new SolicitudDTO(ecosistema, prompt, username);
 		SolicitudDTO procesada = solicitudServ.procesarYGuardarSolicitud(dto);
+
+		String ip = httpRequest != null ? httpRequest.getRemoteAddr() : "127.0.0.1";
+		auditoriaServ.registrarAccion(username, "USER", "BUSQUEDA_LIBRERIAS",
+				"Ecosistema: " + ecosistema + " | Prompt: " + prompt, ip, null, true);
+
 		return new ResponseEntity<>(procesada, HttpStatus.CREATED);
 	}
 
 	@Operation(summary = "Crear solicitud (JSON)")
 	@PostMapping(path = "/createjson", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<SolicitudDTO> createWithJson(@RequestBody SolicitudDTO newSolicitud) {
-		if (newSolicitud.getPrompt() == null || newSolicitud.getPrompt().isBlank()) {
+	public ResponseEntity<SolicitudDTO> createWithJson(@RequestBody SolicitudDTO newSolicitud,
+			HttpServletRequest httpRequest) {
+		if (newSolicitud.getPrompt() == null || newSolicitud.getPrompt().isEmpty()) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		}
-		newSolicitud.setUsername(obtenerUsuarioAutenticado(newSolicitud.getUsername()));
+		String username = obtenerUsuarioAutenticado(newSolicitud.getUsername());
+		newSolicitud.setUsername(username);
 		SolicitudDTO saved = solicitudServ.procesarYGuardarSolicitud(newSolicitud);
+
+		String ip = httpRequest != null ? httpRequest.getRemoteAddr() : "127.0.0.1";
+		auditoriaServ.registrarAccion(username, "USER", "BUSQUEDA_LIBRERIAS",
+				"Solicitud ID: " + saved.getId() + " (" + saved.getEcosistema() + ")", ip, null, true);
+
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
@@ -87,11 +112,31 @@ public class SolicitudController {
 		return ResponseEntity.ok(solicitudServ.getByUsername(username));
 	}
 
-	@Operation(summary = "Exportar en PDF el historial del usuario autenticado")
+	@Operation(summary = "Descargar una búsqueda individual en PDF con su solicitud y las tres respuestas")
+	@GetMapping(value = "/exportar-pdf/id/{id}", produces = MediaType.APPLICATION_PDF_VALUE)
+	public ResponseEntity<byte[]> exportarSolicitudPorIdPdf(@PathVariable Long id, HttpServletRequest httpRequest) {
+		String username = obtenerUsuarioAutenticado(null);
+		byte[] pdfBytes = solicitudServ.exportarSolicitudIndividualPdf(id);
+
+		String ip = httpRequest != null ? httpRequest.getRemoteAddr() : "127.0.0.1";
+		auditoriaServ.registrarAccion(username, "USER", "DESCARGA_PDF_BUSQUEDA",
+				"Descarga PDF de solicitud ID: " + id, ip, null, true);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_PDF);
+		headers.setContentDispositionFormData("attachment", "busqueda_" + id + ".pdf");
+		return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+	}
+
+	@Operation(summary = "Exportar en PDF todo el historial del usuario autenticado")
 	@GetMapping(value = "/exportar-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-	public ResponseEntity<byte[]> exportarMiHistorialPdf() {
+	public ResponseEntity<byte[]> exportarMiHistorialPdf(HttpServletRequest httpRequest) {
 		String username = obtenerUsuarioAutenticado(null);
 		byte[] pdfBytes = solicitudServ.exportarHistorialUsuarioPdf(username);
+
+		String ip = httpRequest != null ? httpRequest.getRemoteAddr() : "127.0.0.1";
+		auditoriaServ.registrarAccion(username, "USER", "DESCARGA_PDF_HISTORIAL",
+				"Descarga PDF historial de " + username, ip, null, true);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_PDF);
@@ -147,7 +192,7 @@ public class SolicitudController {
 		if (auth != null && auth.isAuthenticated() && !"anonymousUser".equals(auth.getName())) {
 			return auth.getName();
 		}
-		return (fallback != null && !fallback.isBlank()) ? fallback : "anonimo";
+		return (fallback != null && !fallback.isEmpty()) ? fallback : "anonimo";
 	}
 
 }
