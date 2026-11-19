@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "auditoria_sesion")
 public class AuditoriaSesion {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -22,6 +22,7 @@ public class AuditoriaSesion {
 	private String username;
 
 	private String rol;
+	private String accion;
 	private LocalDateTime fecha;
 
 	@Column(columnDefinition = "TEXT")
@@ -33,7 +34,6 @@ public class AuditoriaSesion {
 	private String ciudad;
 	private String pais;
 	private boolean exitoso;
-	private boolean confirmadoCorreo;
 
 	@Column(columnDefinition = "TEXT")
 	private String detalle;
@@ -42,17 +42,17 @@ public class AuditoriaSesion {
 		this.fecha = LocalDateTime.now();
 	}
 
-	public AuditoriaSesion(String username, String rol, LocalDateTime fecha, String ip, String coordenadas,
-			String ciudad, String pais, boolean exitoso, boolean confirmadoCorreo, String detalle) {
+	public AuditoriaSesion(String username, String rol, String accion, LocalDateTime fecha, String ip,
+			String coordenadas, String ciudad, String pais, boolean exitoso, String detalle) {
 		this.username = username;
 		this.rol = rol;
+		this.accion = accion;
 		this.fecha = fecha != null ? fecha : LocalDateTime.now();
 		this.ip = ip;
 		this.coordenadas = coordenadas;
 		this.ciudad = ciudad;
 		this.pais = pais;
 		this.exitoso = exitoso;
-		this.confirmadoCorreo = confirmadoCorreo;
 		this.detalle = detalle;
 	}
 
@@ -78,6 +78,14 @@ public class AuditoriaSesion {
 
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+
+	public String getAccion() {
+		return accion;
+	}
+
+	public void setAccion(String accion) {
+		this.accion = accion;
 	}
 
 	public LocalDateTime getFecha() {
@@ -128,14 +136,6 @@ public class AuditoriaSesion {
 		this.exitoso = exitoso;
 	}
 
-	public boolean isConfirmadoCorreo() {
-		return confirmadoCorreo;
-	}
-
-	public void setConfirmadoCorreo(boolean confirmadoCorreo) {
-		this.confirmadoCorreo = confirmadoCorreo;
-	}
-
 	public String getDetalle() {
 		return detalle;
 	}
@@ -161,9 +161,8 @@ public class AuditoriaSesion {
 
 	@Override
 	public String toString() {
-		return "AuditoriaSesion [id=" + id + ", username=" + username + ", fecha=" + fecha + ", ip=" + ip
-				+ ", coordenadas=" + coordenadas + ", exitoso=" + exitoso + "]";
+		return "AuditoriaSesion [id=" + id + ", username=" + username + ", accion=" + accion + ", fecha=" + fecha
+				+ ", ip=" + ip + ", coordenadas=" + coordenadas + ", exitoso=" + exitoso + "]";
 	}
-
 
 }

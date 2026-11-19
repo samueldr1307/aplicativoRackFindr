@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "solicitud")
 public class Solicitud {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -153,7 +153,5 @@ public class Solicitud {
 		return "Solicitud [id=" + id + ", fecha=" + fecha + ", ecosistema=" + ecosistema + ", prompt=" + prompt
 				+ ", iaUsada=" + iaUsada + ", username=" + username + "]";
 	}
-
-
 
 }

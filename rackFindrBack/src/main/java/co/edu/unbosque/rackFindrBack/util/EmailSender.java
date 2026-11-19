@@ -36,25 +36,27 @@ public class EmailSender {
 		}
 	}
 
-	public boolean enviarConfirmacionInicioSesion(String to, String username, String fecha, String ip,
-			String coordenadas, String ciudad, String pais, String codigoVerificacion) {
-		String subject = "Confirmacion de inicio de sesion - RackFindr";
-		String body = "Hola " + username + ",\n\n" + "Se registro un inicio de sesion en tu cuenta.\n" + "Fecha: "
-				+ fecha + "\n" + "IP: " + ip + "\n" + "Coordenadas: " + coordenadas + " (" + ciudad + ", " + pais
-				+ ")\n" + "Codigo de confirmacion: " + codigoVerificacion + "\n";
+	public boolean enviarConfirmacionRegistro(String to, String username, String codigoVerificacion) {
+		String enlace = "http://localhost:8080/auth/confirmar-cuenta?username=" + username + "&codigo="
+				+ codigoVerificacion;
+		String subject = "Confirma tu cuenta en RackFindr";
+		String body = "Hola " + username + ",\n\n"
+				+ "Gracias por registrarte en RackFindr.\n"
+				+ "Antes de iniciar sesion, confirma tu cuenta haciendo clic en el siguiente enlace:\n"
+				+ enlace + "\n\n"
+				+ "O ingresando tu codigo de activacion: " + codigoVerificacion + "\n";
 		return sendEmail(to, subject, body);
 	}
 
 	public boolean enviarRecuperacionContrasena(String to, String username, String codigoRecuperacion) {
+		String enlaceFront = "http://localhost:4200/restablecer-contrasena?username=" + username + "&codigo="
+				+ codigoRecuperacion;
 		String subject = "Recuperacion de contrasena - RackFindr";
-		String body = "Hola " + username + ",\n\n" + "Solicitaste recuperar tu contrasena.\n"
-				+ "Tu codigo de recuperacion es: " + codigoRecuperacion + "\n";
-		return sendEmail(to, subject, body);
-	}
-
-	public boolean enviarBienvenidaRegistro(String to, String username) {
-		String subject = "Bienvenido a RackFindr";
-		String body = "Hola " + username + ", tu cuenta fue creada con exito.";
+		String body = "Hola " + username + ",\n\n"
+				+ "Solicitaste recuperar tu contrasena.\n"
+				+ "Haz clic en el siguiente enlace para restablecer tu contrasena:\n"
+				+ enlaceFront + "\n\n"
+				+ "Codigo de recuperacion: " + codigoRecuperacion + "\n";
 		return sendEmail(to, subject, body);
 	}
 

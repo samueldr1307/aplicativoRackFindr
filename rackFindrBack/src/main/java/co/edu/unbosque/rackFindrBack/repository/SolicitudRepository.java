@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import co.edu.unbosque.rackFindrBack.model.Solicitud;
 
-public interface SolicitudRepository extends JpaRepository<Solicitud , Long>{
-	
+public interface SolicitudRepository extends JpaRepository<Solicitud, Long> {
+
 	public List<Solicitud> findByUsernameOrderByFechaDesc(String username);
 
 	public List<Solicitud> findByUserIdOrderByFechaDesc(Long userId);
@@ -18,5 +18,5 @@ public interface SolicitudRepository extends JpaRepository<Solicitud , Long>{
 
 	public void deleteByUsername(String username);
 
-
 }
+

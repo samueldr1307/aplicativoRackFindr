@@ -5,12 +5,13 @@ import java.util.Objects;
 import co.edu.unbosque.rackFindrBack.model.User.Role;
 
 public class UserDTO {
-	
+
 	private Long id;
 	private String username;
 	private String password;
 	private String email;
 	private Role role;
+	private boolean enabled = true;
 	private String codigoVerificacion;
 	private String codigoRecuperacion;
 	private String ip;
@@ -77,6 +78,14 @@ public class UserDTO {
 		this.role = role;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public String getCodigoVerificacion() {
 		return codigoVerificacion;
 	}
@@ -129,9 +138,8 @@ public class UserDTO {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role + "]";
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", role=" + role
+				+ ", enabled=" + enabled + "]";
 	}
-
-
 
 }
