@@ -19,5 +19,12 @@ export class AuthService {
       password,
       });
     }
+    registrar(username: string, password: string, email: string) {
+    return this.http.post(
+      URL_BACK + '/auth/register',
+      { username, password, email },
+      { responseType: 'text' }, //devolvemos text por que en el login, Spring devuelve un objeto con token y role. En el registro devuelve una frase para mostrar en pantalla.
+    );
+    }
   }
 

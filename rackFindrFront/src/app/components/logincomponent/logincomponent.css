@@ -10,6 +10,13 @@
   color: #f4f4f5;
   font-family: "Segoe UI", Arial, sans-serif;
 }
+.enlace-cuenta{
+  display: inline-block;
+  margin-top: 1rem;
+  color: #e6b35a;
+  text-underline-offset: 3px;
+}
+
 
 .login h1 {
   margin: 0 0 1.5rem;

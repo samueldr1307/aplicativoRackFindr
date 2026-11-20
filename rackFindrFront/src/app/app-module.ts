@@ -7,9 +7,10 @@ import { Footercomponent } from './components/footercomponent/footercomponent';
 import { Navbarcomponent } from './components/navbarcomponent/navbarcomponent';
 import { FormsModule } from '@angular/forms';
 import { Logincomponent } from './components/logincomponent/logincomponent';
+import { Registrocomponent } from './components/registrocomponent/registrocomponent';
 
 @NgModule({
-  declarations: [App, Footercomponent, Navbarcomponent, Logincomponent],
+  declarations: [App, Footercomponent, Navbarcomponent, Logincomponent, Registrocomponent],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],
