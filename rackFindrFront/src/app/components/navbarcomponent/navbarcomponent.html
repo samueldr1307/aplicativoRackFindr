@@ -11,7 +11,7 @@
       <a class="enlace" routerLink="/" routerLinkActive="activo"
          [routerLinkActiveOptions]="{ exact: true }">Buscar</a>
 
-      <span class="enlace apagado">Historial</span>
+      <a class="enlace" routerLink="/historial" routerLinkActive="activo">Historial</a>
 
       @if (authService.haySesion()) {
         <button type="button" class="boton-sesion" (click)="authService.cerrarSesion()">

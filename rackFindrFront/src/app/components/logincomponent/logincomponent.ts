@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-logincomponent',
@@ -16,6 +17,7 @@ export class Logincomponent {
   constructor(
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   ingresar() {
@@ -37,9 +39,8 @@ export class Logincomponent {
       next: (respuesta) => {
         this.authService.guardarSesion(respuesta.token, respuesta.role);
         this.password = '';
-        this.mensaje = 'Sesión iniciada correctamente.';
         this.cargando = false;
-        this.cdr.detectChanges();
+        void this.router.navigateByUrl('/');
       },
       error: (error) => {
         if (error.status === 0) {
