@@ -8,32 +8,31 @@ interface RespuestaLogin {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   iniciarSesion(username: string, password: string) {
     return this.http.post<RespuestaLogin>(URL_BACK + '/auth/login', {
       username,
       password,
-      });
-    }
-    registrar(username: string, password: string, email: string) {
+    });
+  }
+  registrar(username: string, email: string, password: string) {
     return this.http.post(
       URL_BACK + '/auth/register',
       { username, password, email },
       { responseType: 'text' }, //devolvemos text por que en el login, Spring devuelve un objeto con token y role. En el registro devuelve una frase para mostrar en pantalla.
     );
-    }
-    recuperarContrasena(usernameOrEmail: string){
+  }
+  recuperarContrasena(usernameOrEmail: string) {
     const datos = new URLSearchParams();
     datos.set('usernameOrEmail', usernameOrEmail);
 
-    return this.http.post(URL_BACK + '/auth/recuperar-contrasena',datos, {
+    return this.http.post(URL_BACK + '/auth/recuperar-contrasena', datos, {
       responseType: 'text',
     });
-    }
-
   }
+}
 
