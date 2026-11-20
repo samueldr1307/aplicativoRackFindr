@@ -34,5 +34,14 @@ export class AuthService {
       responseType: 'text',
     });
   }
-}
+  restablecerContrasena(usuario: string, codigo: string, nuevaPassword: string) {
+    const datos = new URLSearchParams();
+    datos.set('usernameOrEmail', usuario);
+    datos.set('codigo', codigo);
+    datos.set('nuevaPassword', nuevaPassword);
 
+    return this.http.post(URL_BACK + '/auth/restablecer-contrasena', datos, {
+      responseType: 'text',
+    });
+  }
+}
