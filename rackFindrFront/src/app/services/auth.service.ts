@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable,signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {URL_BACK } from './api';
 
@@ -43,5 +43,16 @@ export class AuthService {
     return this.http.post(URL_BACK + '/auth/restablecer-contrasena', datos, {
       responseType: 'text',
     });
+  }
+  readonly haySesion = signal(Boolean(localStorage.getItem('token')));
+  guardarSesion(token: string, role: string) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('role', role);
+    this.haySesion.set(true);
+  }
+  cerrarSesion() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    this.haySesion.set(false);
   }
 }

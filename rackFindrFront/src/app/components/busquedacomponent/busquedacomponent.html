@@ -52,37 +52,49 @@
 </div>
 
 @if (cargando) {
-  <div class="cargando">
+  <div class="cargando" role="status">
     <div class="rueda"></div>
-    <span>Buscando librerías...</span>
+    <span>Consultando las IAs...</span>
   </div>
-}
-
-@if (error) {
-  <div class="error">
+} @else if (error) {
+  <div class="error" role="alert">
     <span>{{ error }}</span>
-    <button class="boton-reintentar" (click)="buscar()">Reintentar</button>
+    <button type="button" class="boton-reintentar" (click)="buscar()">
+      Reintentar
+    </button>
   </div>
-}
+} @else if (buscado) {
+  @if (respuestas.length === 0) {
+    <div class="vacio">No se encontraron librerías.</div>
+  }
 
-@if (buscado && resultados.length === 0) {
-  <div class="vacio">No se encontraron librerías.</div>
-}
+  @for (respuesta of respuestas; track respuesta.nombreIA) {
+    <section>
+      <h3 class="titulo-respuesta">Respuesta de {{ respuesta.nombreIA }}</h3>
 
-@for (r of resultados; track r.nombre) {
-  <div class="tarjeta">
-    <div class="cuerpo">
-      <h5 class="nombre">{{ r.nombre }}</h5>
-      <p class="descripcion">{{ r.descripcion }}</p>
+      @if (respuesta.error) {
+        <p class="error">{{ respuesta.error }}</p>
+      } @else {
+        @for (r of respuesta.recomendaciones; track r.nombre) {
+          <article class="tarjeta">
+            <div class="cuerpo">
+              <h4 class="nombre">{{ r.nombre }}</h4>
+              <p class="descripcion">{{ r.descripcion }}</p>
 
-      <p class="subtitulo">Instalación</p>
-      <pre class="codigo"><code>{{ r.instalacion }}</code></pre>
+              <p class="subtitulo">Instalación</p>
+              <pre class="codigo"><code>{{ r.instalacion }}</code></pre>
 
-      <p class="subtitulo">Cómo usarla</p>
-      <p class="descripcion">{{ r.comoUsar }}</p>
+              <p class="subtitulo">Cómo usarla</p>
+              <p class="descripcion">{{ r.comoUsar }}</p>
 
-      <p class="subtitulo">Ejemplo de uso</p>
-      <pre class="codigo"><code>{{ r.ejemplo }}</code></pre>
-    </div>
-  </div>
+              <p class="subtitulo">Ejemplo de uso</p>
+              <pre class="codigo"><code>{{ r.ejemplo }}</code></pre>
+            </div>
+          </article>
+        } @empty {
+          <p class="vacio">Esta IA no recomendó librerías.</p>
+        }
+      }
+    </section>
+  }
 }

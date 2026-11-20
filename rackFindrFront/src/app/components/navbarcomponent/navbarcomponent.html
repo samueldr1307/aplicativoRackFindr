@@ -13,8 +13,13 @@
 
       <span class="enlace apagado">Historial</span>
 
-      <a class="boton-sesion" routerLink="/login">Iniciar sesión</a>
+      @if (authService.haySesion()) {
+        <button type="button" class="boton-sesion" (click)="authService.cerrarSesion()">
+          Cerrar sesión
+        </button>
+      } @else {
+        <a class="boton-sesion" routerLink="/login">Iniciar sesión</a>
+      }
     </div>
-
   </div>
 </nav>
