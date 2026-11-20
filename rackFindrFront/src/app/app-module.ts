@@ -13,6 +13,7 @@ import { Registrocomponent } from './components/registrocomponent/registrocompon
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
 import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
 import { Historialcomponent } from './components/historialcomponent/historialcomponent';
+import { Instalacioncomponent } from './components/instalacioncomponent/instalacioncomponent';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { Historialcomponent } from './components/historialcomponent/historialcom
     Recuperarcomponent,
     Restablecercomponent,
     Historialcomponent,
+    Instalacioncomponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
