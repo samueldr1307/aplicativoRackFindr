@@ -1,0 +1,97 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+}
+
+
+.barra {
+  background: rgba(11, 13, 18, 0.75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--borde-dorado, rgba(212, 162, 76, 0.28));
+}
+
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nombre {
+  font-weight: 700;
+}
+
+/* El cuadradito con las llaves { } */
+.logo {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--degradado, linear-gradient(135deg, #d4a24c 0%, #f0c27a 100%));
+  color: #0b0d12;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Palabra "Mini" con degradado dorado */
+.dorado {
+  background: var(--degradado, linear-gradient(135deg, #d4a24c 0%, #f0c27a 100%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.enlaces {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.enlace {
+  color: var(--texto-suave, #9aa0ac);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.enlace:hover {
+  color: var(--texto, #ece8df);
+}
+
+.activo {
+  color: var(--texto, #ece8df);
+  border-bottom: 2px solid var(--dorado, #d4a24c);
+}
+
+.apagado {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Botón "Iniciar sesión" */
+.boton-sesion {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background: transparent;
+  color: var(--dorado, #d4a24c);
+  border: 1px solid var(--borde-dorado, rgba(212, 162, 76, 0.28));
+  border-radius: 8px;
+}
+
+.boton-sesion:hover {
+  border-color: var(--dorado, #d4a24c);
+  color: var(--dorado-claro, #f0c27a);
+}
+
+/* Desactivado: va después del hover para ganarle */
+.boton-sesion[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  border-color: var(--borde-dorado, rgba(212, 162, 76, 0.28));
+  color: var(--dorado, #d4a24c);
+}

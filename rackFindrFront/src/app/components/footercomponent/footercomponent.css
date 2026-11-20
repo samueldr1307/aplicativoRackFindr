@@ -1,0 +1,79 @@
+:host {
+  display: block;
+}
+
+.pie {
+  padding: 2rem 0 1rem;
+  background: var(--superficie, #10131a);
+  border-top: 1px solid var(--borde-dorado, rgba(212, 162, 76, 0.28));
+}
+
+.contenido {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--degradado, linear-gradient(135deg, #d4a24c 0%, #f0c27a 100%));
+  color: #0b0d12;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.nombre {
+  margin: 0;
+  font-weight: 700;
+}
+
+.dorado {
+  background: var(--degradado, linear-gradient(135deg, #d4a24c 0%, #f0c27a 100%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.texto {
+  margin: 0;
+  color: var(--texto-suave, #9aa0ac);
+  font-size: 0.875rem;
+}
+
+.enlaces {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.enlace {
+  color: var(--texto-suave, #9aa0ac);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.enlace:hover {
+  color: var(--dorado, #d4a24c);
+}
+
+.derechos {
+  margin: 1.5rem 0 0;
+  padding-top: 1rem;
+  text-align: center;
+  color: var(--texto-suave, #9aa0ac);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+}
