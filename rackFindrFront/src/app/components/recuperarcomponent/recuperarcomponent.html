@@ -1,0 +1,22 @@
+<section class="login">
+  <h1>Recuperar contraseña</h1>
+  @if (!enviado) {
+
+    <form (ngSubmit)="solicitarEnlace()" ngNativeValidate>
+      <label for="usuarioOCorreo">Usuario o Correo electrónico</label>
+      <input
+        id="usuarioOCorreo"
+        name="usuarioOCorreo"
+        type="text"
+        autocomplete="username"
+        [(ngModel)]="usuarioOCorreo"
+        required
+      />
+      <button type="submit" [disabled]="enviando">
+        {{ enviando ? 'Enviando...' : 'Enviar enlace' }}
+      </button>
+    </form>
+  }
+  <p aria-live="polite">{{ mensaje }}</p>
+  <a class="enlace-cuenta" routerLink="/login">Volver al inicio de sesión</a>
+</section>
