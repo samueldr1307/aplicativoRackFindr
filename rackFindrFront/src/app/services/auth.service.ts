@@ -26,5 +26,14 @@ export class AuthService {
       { responseType: 'text' }, //devolvemos text por que en el login, Spring devuelve un objeto con token y role. En el registro devuelve una frase para mostrar en pantalla.
     );
     }
+    recuperarContrasena(usernameOrEmail: string){
+    const datos = new URLSearchParams();
+    datos.set('usernameOrEmail', usernameOrEmail);
+
+    return this.http.post(URL_BACK + '/auth/recuperar-contrasena',datos, {
+      responseType: 'text',
+    });
+    }
+
   }
 

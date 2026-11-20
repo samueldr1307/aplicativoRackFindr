@@ -8,9 +8,17 @@ import { Navbarcomponent } from './components/navbarcomponent/navbarcomponent';
 import { FormsModule } from '@angular/forms';
 import { Logincomponent } from './components/logincomponent/logincomponent';
 import { Registrocomponent } from './components/registrocomponent/registrocomponent';
+import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
 
 @NgModule({
-  declarations: [App, Footercomponent, Navbarcomponent, Logincomponent, Registrocomponent],
+  declarations: [
+    App,
+    Footercomponent,
+    Navbarcomponent,
+    Logincomponent,
+    Registrocomponent,
+    Recuperarcomponent,
+  ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
   bootstrap: [App],
