@@ -35,8 +35,7 @@ export class Logincomponent {
 
     this.authService.iniciarSesion(usuario, this.password).subscribe({
       next: (respuesta) => {
-        localStorage.setItem('token', respuesta.token);
-        localStorage.setItem('role', respuesta.role);
+        this.authService.guardarSesion(respuesta.token, respuesta.role);
         this.password = '';
         this.mensaje = 'Sesión iniciada correctamente.';
         this.cargando = false;
