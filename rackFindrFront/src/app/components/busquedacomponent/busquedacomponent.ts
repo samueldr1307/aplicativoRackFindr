@@ -1,6 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Resultado } from '../../models/resultado.model';
 
+interface RespuestaIA {
+  nombreIA: string;
+  recomendaciones: Resultado[];
+  error: string;
+}
+
 @Component({
   selector: 'app-busquedacomponent',
   standalone: false,
@@ -9,11 +15,11 @@ import { Resultado } from '../../models/resultado.model';
 })
 export class Busquedacomponent {
   ecosistema: 'npm' | 'maven' = 'npm';
-  consulta: string = '';
-  cargando: boolean = false;
-  buscado: boolean = false;
-  error: string = '';
-  resultados: Resultado[] = [];
+  consulta = '';
+  cargando = false;
+  buscado = false;
+  error = '';
+  respuestas: RespuestaIA[] = [];
 
   datosNpm: Resultado[] = [
     {
@@ -62,22 +68,47 @@ export class Busquedacomponent {
   }
 
   buscar(): void {
-    if (!this.consulta.trim()) return;
+    const consulta = this.consulta.trim().toLowerCase();
+
+    if (!consulta || this.cargando) {
+      return;
+    }
+
+    const ejemplos = this.ecosistema === 'npm' ? this.datosNpm : this.datosMaven;
 
     this.cargando = true;
     this.buscado = false;
     this.error = '';
-    this.resultados = [];
+    this.respuestas = [];
 
+    // Simula la espera mientras conectamos las tres IAs al backend.
     setTimeout(() => {
-      if (this.consulta.toLowerCase().includes('error')) {
-        this.error = 'No se pudo obtener respuesta. Intenta de nuevo.';
-      } else {
-        this.resultados = this.ecosistema === 'npm' ? this.datosNpm : this.datosMaven;
-        this.buscado = true;
+      if (consulta === 'error') {
+        this.error = 'No se pudieron consultar las IAs. Intenta de nuevo.';
+      } else if (consulta !== 'sin resultados') {
+        const falloTerceraIA = consulta === 'error parcial';
+
+        this.respuestas = [
+          {
+            nombreIA: 'IA 1',
+            recomendaciones: ejemplos.slice(0, 1),
+            error: '',
+          },
+          {
+            nombreIA: 'IA 2',
+            recomendaciones: ejemplos.slice(1),
+            error: '',
+          },
+          {
+            nombreIA: 'IA 3',
+            recomendaciones: falloTerceraIA ? [] : [...ejemplos],
+            error: falloTerceraIA ? 'Esta IA no pudo responder.' : '',
+          },
+        ];
       }
 
       this.cargando = false;
+      this.buscado = true;
       this.cdr.detectChanges();
     }, 1500);
   }
