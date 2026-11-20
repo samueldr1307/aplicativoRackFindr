@@ -1,0 +1,17 @@
+<section class="historial">
+  <h2 class="titulo">Historial de búsquedas</h2>
+
+  @for (busqueda of historialService.busquedas(); track busqueda.id) {
+    <article class="busqueda">
+      <h3 class="consulta">{{ busqueda.consulta }}</h3>
+      <p class="detalle">
+        {{ busqueda.ecosistema === 'npm' ? 'npm' : 'Maven' }}
+        · {{ busqueda.fecha | date:'dd/MM/yyyy HH:mm' }}
+      </p>
+    </article>
+  } @empty {
+    <p class="mensaje-vacio">Todavía no tienes búsquedas guardadas.</p>
+  }
+
+  <a class="enlace-buscar" routerLink="/">Buscar librerías</a>
+</section>

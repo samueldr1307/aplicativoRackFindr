@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Resultado } from '../../models/resultado.model';
+import {HistorialService} from '../../services/historial.service';
 
 interface RespuestaIA {
   nombreIA: string;
@@ -61,20 +62,23 @@ export class Busquedacomponent {
     },
   ];
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private historialService: HistorialService,
+  ) {}
 
   elegir(valor: 'npm' | 'maven'): void {
     this.ecosistema = valor;
   }
 
   buscar(): void {
-    const consulta = this.consulta.trim().toLowerCase();
+    const textoOriginal = this.consulta.trim();
+    const consulta = textoOriginal.toLowerCase();
 
-    if (!consulta || this.cargando) {
-      return;
-    }
+    if (!consulta || this.cargando) return;
 
-    const ejemplos = this.ecosistema === 'npm' ? this.datosNpm : this.datosMaven;
+    const ecosistema = this.ecosistema;
+    const ejemplos = ecosistema === 'npm' ? this.datosNpm : this.datosMaven;
 
     this.cargando = true;
     this.buscado = false;
@@ -106,7 +110,9 @@ export class Busquedacomponent {
           },
         ];
       }
-
+      if (!this.error){
+        this.historialService.guardar(textoOriginal, ecosistema);
+      }
       this.cargando = false;
       this.buscado = true;
       this.cdr.detectChanges();
