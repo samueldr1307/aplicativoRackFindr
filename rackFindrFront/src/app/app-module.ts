@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Logincomponent } from './components/logincomponent/logincomponent';
 import { Registrocomponent } from './components/registrocomponent/registrocomponent';
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
+import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcom
     Logincomponent,
     Registrocomponent,
     Recuperarcomponent,
+    Restablecercomponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],

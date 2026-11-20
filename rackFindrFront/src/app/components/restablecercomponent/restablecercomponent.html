@@ -1,0 +1,37 @@
+<section class="login">
+  <h1>Restablecer Conntraseña</h1>
+
+  @if (usuario && codigo && !actualizada) {
+    <form (ngSubmit)="guardar()" ngNativeValidate>
+      <label for="nuevaPassword">Nueva contraseña</label>
+      <input
+        id="nuevaPassword"
+        name=" nuevaPassword "
+        type="password"
+        autocomplete="new-password"
+        [(ngModel)]="nuevaPassword"
+        required
+      />
+<label for="confirmarPassword">Confirmar contraseña</label>
+    <input
+    id="confirmarPassword"
+    name="confirmarPassword"
+    type="password"
+    autocomplete="new-password"
+    [(ngModel)]="confirmarPassword"
+    required
+    />
+      <button type="submit" [disabled]="guardando">
+        {{guardando ? 'Guardando...' : 'Guardar contraseña'}}
+      </button>
+    </form>
+  }
+  <p aria-live="polite">{{mensaje}}</p>
+  @if (actualizada){
+    <a class="enlace-cuenta" routerLink="/login">Iniciar sesión</a>
+  } @else {
+    <a class="enlace-cuenta" routerLink="/recuperar-contrasena">
+      Solicitar otro enlace
+    </a>
+  }
+      </section>
