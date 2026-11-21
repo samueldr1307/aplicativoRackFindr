@@ -1,0 +1,67 @@
+.admin {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.admin h1 {
+  margin-bottom: 2rem;
+}
+
+.admin h2 {
+  margin-bottom: 0.5rem;
+}
+
+.nota,
+.vacio {
+  color: var(--texto-suave, #9aa0ac);
+}
+
+.admin label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.campo {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 26rem;
+  margin-bottom: 1.25rem;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  color: var(--texto, #ece8df);
+  background: var(--superficie, #10131a);
+  border: 1px solid var(--borde, rgba(255, 255, 255, 0.15));
+  border-radius: 8px;
+}
+
+.campo:focus-visible {
+  outline: 2px solid var(--dorado, #d4a24c);
+  outline-offset: 2px;
+}
+
+.contenedor-tabla {
+  overflow-x: auto;
+  background: var(--superficie, #10131a);
+  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.85rem 1rem;
+  text-align: left;
+}
+
+th {
+  color: var(--dorado-claro, #f0c27a);
+}
+
+tbody tr {
+  border-top: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+}
