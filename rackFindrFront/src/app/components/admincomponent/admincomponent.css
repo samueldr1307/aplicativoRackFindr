@@ -65,6 +65,7 @@ th {
 tbody tr {
   border-top: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
 }
+
 .boton-estado {
   padding: 0.35rem 0.85rem;
   font: inherit;
@@ -83,4 +84,35 @@ tbody tr {
 .boton-estado:focus-visible {
   outline: 2px solid var(--dorado, #d4a24c);
   outline-offset: 2px;
+}
+
+.formulario {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: var(--superficie, #10131a);
+  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+}
+
+.formulario:focus {
+  margin: 0 0 1rem;
+}
+
+.formulario-edicion .campo {
+  display: block;
+}
+
+.acciones-edicion {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+td .boton-estado + .boton-estado {
+  margin-left: 0.5rem;
+}
+
+.boton-estado:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
