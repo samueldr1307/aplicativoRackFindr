@@ -14,6 +14,7 @@ import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcom
 import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
 import { Historialcomponent } from './components/historialcomponent/historialcomponent';
 import { Instalacioncomponent } from './components/instalacioncomponent/instalacioncomponent';
+import { Admincomponent } from './components/admincomponent/admincomponent';
 import { Iniciocomponent } from './components/iniciocomponent/iniciocomponent';
 
 @NgModule({
@@ -28,6 +29,7 @@ import { Iniciocomponent } from './components/iniciocomponent/iniciocomponent';
     Restablecercomponent,
     Historialcomponent,
     Instalacioncomponent,
+    Admincomponent,
     Iniciocomponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
