@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { Resultado } from '../../models/resultado.model';
-import {HistorialService} from '../../services/historial.service';
+import { HistorialService } from '../../services/historial.service';
+import { BusquedaService } from '../../services/busqueda.service';
 
 interface RespuestaIA {
   nombreIA: string;
@@ -65,6 +66,7 @@ export class Busquedacomponent {
   constructor(
     private cdr: ChangeDetectorRef,
     private historialService: HistorialService,
+    private busquedaService: BusquedaService,
   ) {}
 
   elegir(valor: 'npm' | 'maven'): void {
@@ -72,50 +74,53 @@ export class Busquedacomponent {
   }
 
   buscar(): void {
-    const textoOriginal = this.consulta.trim();
-    const consulta = textoOriginal.toLowerCase();
+    const consulta = this.consulta.trim();
 
     if (!consulta || this.cargando) return;
 
     const ecosistema = this.ecosistema;
-    const ejemplos = ecosistema === 'npm' ? this.datosNpm : this.datosMaven;
 
     this.cargando = true;
     this.buscado = false;
     this.error = '';
     this.respuestas = [];
 
-    // Simula la espera mientras conectamos las tres IAs al backend.
-    setTimeout(() => {
-      if (consulta === 'error') {
-        this.error = 'No se pudieron consultar las IAs. Intenta de nuevo.';
-      } else if (consulta !== 'sin resultados') {
-        const falloTerceraIA = consulta === 'error parcial';
+    this.busquedaService.buscar(ecosistema, consulta).subscribe({
+      next: (resultados) => {
+        const grupos = new Map<string, RespuestaIA>();
 
-        this.respuestas = [
-          {
-            nombreIA: 'IA 1',
-            recomendaciones: ejemplos.slice(0, 1),
-            error: '',
-          },
-          {
-            nombreIA: 'IA 2',
-            recomendaciones: ejemplos.slice(1),
-            error: '',
-          },
-          {
-            nombreIA: 'IA 3',
-            recomendaciones: falloTerceraIA ? [] : [...ejemplos],
-            error: falloTerceraIA ? 'Esta IA no pudo responder.' : '',
-          },
-        ];
-      }
-      if (!this.error){
-        this.historialService.guardar(textoOriginal, ecosistema);
-      }
-      this.cargando = false;
-      this.buscado = true;
-      this.cdr.detectChanges();
-    }, 1500);
+        for (const resultado of resultados) {
+          const nombreIA = resultado.iaOrigen?.trim() || 'IA sin identificar';
+          let grupo = grupos.get(nombreIA);
+
+          if (!grupo) {
+            grupo = { nombreIA, recomendaciones: [], error: '' };
+            grupos.set(nombreIA, grupo);
+          }
+
+          grupo.recomendaciones.push(resultado);
+        }
+
+        this.respuestas = Array.from(grupos.values());
+        this.historialService.guardar(consulta, ecosistema);
+        this.buscado = true;
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        if (error.status === 0) {
+          this.error = 'No se pudo conectar con el servidor.';
+        } else if (error.status === 401) {
+          this.error = 'Inicia sesión para buscar librerías.';
+        } else if (error.status === 403) {
+          this.error = 'No tienes permiso para realizar esta búsqueda.';
+        } else {
+          this.error = 'No se pudo completar la búsqueda. Intenta de nuevo.';
+        }
+
+        this.cargando = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 }
