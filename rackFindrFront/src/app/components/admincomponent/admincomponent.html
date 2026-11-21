@@ -3,7 +3,7 @@
 
   <section aria-labelledby="titulo-usuarios">
     <section aria-labelledby="titulo-resumen">
-      <h2 id="titulo-resumen">Resumen de usuarios</h2>
+      <h2 id="titulo-resumen">Resumen de uso</h2>
 
       <dl class="resumen-usuarios">
         <div class="tarjeta-resumen">
@@ -24,6 +24,11 @@
         <div class="tarjeta-resumen">
           <dt>Administradores</dt>
           <dd>{{ totalAdministradores }}</dd>
+        </div>
+
+        <div class="tarjeta-resumen">
+          <dt>Búsquedas totales</dt>
+          <dd>{{ totalBusquedas }}</dd>
         </div>
       </dl>
       <figure class="grafica-estado">
@@ -47,6 +52,31 @@
           </ul>
         } @else {
           <p class="nota">No hay cuentas para mostrar en la gráfica.</p>
+        }
+
+      </figure>
+      <figure class="grafica-estado">
+        <figcaption>Búsquedas por ecosistema</figcaption>
+        <p class="nota">Datos de ejemplo.</p>
+
+        @if (totalBusquedas > 0) {
+          <div class="barra-estado" aria-hidden="true">
+            <span class="segmento-npm" [style.flex-grow]="busquedasPorEcosistema.npm"></span>
+            <span class="segmento-maven" [style.flex-grow]="busquedasPorEcosistema.maven"></span>
+          </div>
+
+          <ul class="leyenda-estado">
+            <li>
+              <span class="muestra segmento-npm" aria-hidden="true"></span>
+              npm: {{ busquedasPorEcosistema.npm }}
+            </li>
+            <li>
+              <span class="muestra segmento-maven" aria-hidden="true"></span>
+              Maven: {{ busquedasPorEcosistema.maven }}
+            </li>
+          </ul>
+        } @else {
+          <p class="nota">No hay búsquedas para mostrar.</p>
         }
       </figure>
     </section>
@@ -95,7 +125,7 @@
           <option value="USER">Cliente</option>
           <option value="ADMIN">Administrador</option>
         </select>
-        @if (errorFormulario){
+        @if (errorFormulario) {
           <p role="alert">{{ errorFormulario }}</p>
         }
 

@@ -111,6 +111,15 @@ export class Admincomponent {
     this.cancelarEdicion();
   }
 
+  busquedasPorEcosistema ={
+    npm: 6,
+    maven: 4,
+
+  };
+  get totalBusquedas(): number {
+    return this.busquedasPorEcosistema.npm + this.busquedasPorEcosistema.maven;
+  }
+
   get totalActivos(): number {
     return this.usuarios.filter((usuario) => usuario.activo).length;
   }
