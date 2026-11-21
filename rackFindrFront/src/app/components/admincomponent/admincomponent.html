@@ -247,9 +247,11 @@
               } @empty {
                 <tr>
                   <td colspan="5" class="vacio">
-                    {{ usuarios().length
-                    ? 'Ninguna cuenta coincide con tu búsqueda.'
-                    : 'No hay cuentas registradas.' }}
+                    {{
+                      usuarios().length
+                        ? 'Ninguna cuenta coincide con tu búsqueda.'
+                        : 'No hay cuentas registradas.'
+                    }}
                   </td>
                 </tr>
               }
@@ -266,7 +268,32 @@
     @if (estado().auditoria) {
       <p role="status">{{ estado().auditoria }}</p>
     } @else {
+      @for (grafica of graficasAuditoria(); track grafica.titulo) {
+        <figure class="grafica-estado">
+          <figcaption>{{ grafica.titulo }}</figcaption>
+
+          @if (grafica.filas.length > 0) {
+            <ul>
+              @for (fila of grafica.filas; track fila.etiqueta) {
+                <li>
+                  <span>{{ fila.etiqueta }}</span>
+                  <meter
+                    min="0"
+                    [max]="grafica.maximo"
+                    [value]="fila.cantidad"
+                    [attr.aria-label]="grafica.titulo + ': ' + fila.etiqueta"
+                  ></meter>
+                  <strong>{{ fila.cantidad }}</strong>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="nota">Todavía no hay registros para esta gráfica.</p>
+          }
+        </figure>
+      }
       <label for="audit-usuario">Filtrar por usuario</label>
+
       <input
         id="audit-usuario"
         class="campo"
@@ -283,6 +310,46 @@
       />
 
       <div class="contenedor-tabla">
+        <section aria-labelledby="titulo-reportes">
+          <h2 id="titulo-reportes">Reportes PDF</h2>
+
+          <div class="acciones-edicion">
+            <button
+              type="button"
+              class="boton-estado"
+              (click)="descargarPdf('usuarios')"
+              [disabled]="descargandoReporte()"
+            >
+              Descargar reporte de usuarios
+            </button>
+
+            <button
+              type="button"
+              class="boton-estado"
+              (click)="descargarPdf('estadisticas')"
+              [disabled]="descargandoReporte()"
+            >
+              Descargar estadísticas
+            </button>
+
+            <button
+              type="button"
+              class="boton-estado"
+              (click)="descargarPdf('general')"
+              [disabled]="descargandoReporte()"
+            >
+              Descargar reporte general
+            </button>
+          </div>
+
+          @if (descargandoReporte()) {
+            <p role="status">Preparando el PDF…</p>
+          }
+
+          @if (errorReporte()) {
+            <p role="alert">{{ errorReporte() }}</p>
+          }
+        </section>
         <table aria-labelledby="titulo-auditoria">
           <thead>
           <tr>
@@ -305,9 +372,11 @@
             } @empty {
               <tr>
                 <td colspan="5" class="vacio">
-                  {{ auditorias().length
-                  ? 'Ningún registro coincide con los filtros.'
-                  : 'No hay registros de auditoría.' }}
+                  {{
+                    auditorias().length
+                      ? 'Ningún registro coincide con los filtros.'
+                      : 'No hay registros de auditoría.'
+                  }}
                 </td>
               </tr>
             }

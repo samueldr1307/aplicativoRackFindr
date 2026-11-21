@@ -112,4 +112,16 @@ export class AdminService {
       responseType: 'text',
     });
   }
+  descargarReporte(tipo: 'usuarios' | 'estadisticas' | 'general') {
+    const rutas = {
+      usuarios: '/admin/reporte/usuarios/pdf',
+      estadisticas: '/admin/estadisticas/pdf',
+      general: '/admin/reporte/pdf',
+    };
+
+    return this.http.get(`${URL_BACK}${rutas[tipo]}`, {
+      headers: this.headers,
+      responseType: 'blob',
+    });
+  }
 }
