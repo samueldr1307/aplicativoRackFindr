@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-interface  UsuarioAdmin {
+interface UsuarioAdmin {
   id: number;
   username: string;
   email: string;
@@ -38,6 +38,18 @@ export class Admincomponent {
 
   cambiarEstado(usuario: UsuarioAdmin) {
     usuario.activo = !usuario.activo;
+  }
+  eliminarUsuario(usuario: UsuarioAdmin) {
+    const confirmado = window.confirm(
+      `¿Eliminar la cuenta de ${usuario.username}? También se borrarán sus búsquedas.`,
+    );
+
+    if (!confirmado) return;
+
+    this.usuarios = this.usuarios.filter((cuenta) => cuenta.id !== usuario.id);
+    if (this.usuarioEnEdicion?.id === usuario.id) {
+      this.cancelarEdicion();
+    }
   }
 
   nuevaCuenta(): void {

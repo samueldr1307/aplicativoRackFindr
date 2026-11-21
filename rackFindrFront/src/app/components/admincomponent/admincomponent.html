@@ -97,6 +97,9 @@
                 >
                   {{ usuario.activo ? ' Desactivar  ' : ' Activar  ' }}
                 </button>
+                <button type="button" class="boton-estado" (click)="eliminarUsuario(usuario)">
+                  Eliminar
+                </button>
               </td>
             </tr>
           } @empty {
