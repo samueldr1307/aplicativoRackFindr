@@ -3,18 +3,30 @@
 
     <a class="marca navbar-brand" routerLink="/">
       <span class="logo">&#123; &#125;</span>
-      <span class="nombre">LibFinder<span class="dorado"> Mini</span></span>
+      <span class="nombre">RackFindr</span>
     </a>
-    
+
     <div class="enlaces">
 
       <a class="enlace" routerLink="/" routerLinkActive="activo"
-         [routerLinkActiveOptions]="{ exact: true }">Buscar</a>
+         [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
 
-      <span class="enlace apagado">Historial</span>
+      <a class="enlace" routerLink="/buscar" routerLinkActive="activo">Buscar</a>
 
-      <button class="boton-sesion" disabled>Iniciar sesión</button>
+      <a class="enlace" routerLink="/historial" routerLinkActive="activo">Historial</a>
+      <a class="enlace" routerLink="/instalacion" routerLinkActive="activo">Instalación(npm)</a>
+
+      @if (authService.esAdmin()) {
+        <a class="enlace" routerLink="/admin" routerLinkActive="activo">Admin</a>
+
+      }
+      @if (authService.haySesion()) {
+        <button type="button" class="boton-sesion" (click)="authService.cerrarSesion()">
+          Cerrar sesión
+        </button>
+      } @else {
+        <a class="boton-sesion" routerLink="/login">Iniciar sesión</a>
+      }
     </div>
-
   </div>
 </nav>

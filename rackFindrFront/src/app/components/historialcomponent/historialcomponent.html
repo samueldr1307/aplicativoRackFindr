@@ -1,0 +1,23 @@
+<section class="historial">
+  <h2 class="titulo">Historial de búsquedas</h2>
+
+  @if (cargando()) {
+    <p role="status">Cargando historial…</p>
+  } @else if (error()) {
+    <p role="alert">{{ error() }}</p>
+    <button type="button" (click)="cargar()">Reintentar</button>
+  } @else {
+    @for (busqueda of busquedas(); track busqueda.id) {
+      <article class="busqueda">
+        <h3 class="consulta">{{ busqueda.consulta }}</h3>
+        <p class="detalle">
+          {{ busqueda.ecosistema }} · {{ busqueda.fecha | date:'dd/MM/yyyy HH:mm' }}
+        </p>
+      </article>
+    } @empty {
+      <p class="mensaje-vacio">Todavía no tienes búsquedas guardadas.</p>
+    }
+  }
+
+  <a class="enlace-buscar" routerLink="/buscar">Buscar librerías</a>
+</section>

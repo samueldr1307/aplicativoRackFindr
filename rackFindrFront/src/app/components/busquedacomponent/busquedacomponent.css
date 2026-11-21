@@ -78,9 +78,16 @@
     opacity: 0.4;
   }
 }
-
 .titulo {
   margin-bottom: 1rem;
+}
+.titulo-respuesta {
+  margin: 2rem 0 0.75rem;
+  font-family: inherit;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--dorado-claro, #f0c27a);
 }
 
 .selector {
