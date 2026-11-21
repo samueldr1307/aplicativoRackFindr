@@ -111,6 +111,16 @@ export class Admincomponent {
     this.cancelarEdicion();
   }
 
+  get totalActivos(): number {
+    return this.usuarios.filter((usuario) => usuario.activo).length;
+  }
+  get totalInactivos(): number {
+    return this.usuarios.length - this.totalActivos;
+  }
+  get totalAdministradores(): number{
+    return this.usuarios.filter((usuario) => usuario.role === 'ADMIN').length
+  }
+
   get usuariosFiltrados(): UsuarioAdmin[] {
     const texto = this.filtro.trim().toLowerCase();
     if (!texto) return this.usuarios;

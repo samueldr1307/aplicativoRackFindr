@@ -116,3 +116,79 @@ td .boton-estado + .boton-estado {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.resumen-usuarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 0 0 2rem;
+}
+
+.tarjeta-resumen {
+  padding: 1rem 1.25rem;
+  background: var(--superficie, #10131a);
+  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+}
+
+.tarjeta-resumen dt {
+  color: var(--texto-suave, #9aa0ac);
+}
+
+.tarjeta-resumen dd {
+  margin: 0.35rem 0 0;
+  color: var(--dorado-claro, #f0c27a);
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+.grafica-estado {
+  margin: 0 0 2rem;
+  padding: 1rem 1.25rem;
+  background: var(--superficie, #10131a);
+  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+}
+
+.grafica-estado figcaption {
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.barra-estado {
+  display: flex;
+  height: 1rem;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.barra-estado > span {
+  flex-basis: 0;
+}
+
+.segmento-activo {
+  background: var(--dorado, #d4a24c);
+}
+
+.segmento-inactivo {
+  background: var(--texto-suave, #9aa0ac);
+}
+
+.leyenda-estado {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leyenda-estado li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.muestra {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+}
