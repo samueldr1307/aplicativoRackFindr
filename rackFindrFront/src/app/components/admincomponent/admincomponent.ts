@@ -16,6 +16,8 @@ interface  UsuarioAdmin {
 export class Admincomponent {
   filtro = '';
   usuarioEnEdicion: UsuarioAdmin | null = null;
+  creandoCuenta = false;
+  errorFormulario = '';
 
   usuarios: UsuarioAdmin[] = [
     {
@@ -38,24 +40,63 @@ export class Admincomponent {
     usuario.activo = !usuario.activo;
   }
 
-  editarUsuario(usuario: UsuarioAdmin) {
+  nuevaCuenta(): void {
+    this.creandoCuenta = true;
+    this.errorFormulario = '';
+    this.usuarioEnEdicion = {
+      id: 0,
+      username: '',
+      email: '',
+      role: 'USER',
+      activo: true,
+    };
+  }
+
+  editarUsuario(usuario: UsuarioAdmin): void {
+    this.creandoCuenta = false;
+    this.errorFormulario = '';
     this.usuarioEnEdicion = { ...usuario };
   }
+
   cancelarEdicion(): void {
     this.usuarioEnEdicion = null;
+    this.creandoCuenta = false;
+    this.errorFormulario = '';
   }
-  guardarEdicion(): void {
-    const editado = this.usuarioEnEdicion;
-    if (!editado) return;
 
-    const usuario = this.usuarios.find((cuenta) => cuenta.id === editado.id);
-    if (!usuario) return;
+  guardarCuenta(): void {
+    const datos = this.usuarioEnEdicion;
+    if (!datos) return;
 
-    usuario.username = editado.username.trim();
-    usuario.email = editado.email.trim();
-    usuario.role = editado.role;
+    const username = datos.username.trim();
+    const email = datos.email.trim();
 
-    this.usuarioEnEdicion = null;
+    const repetido = this.usuarios.some(
+      (usuario) =>
+        usuario.id !== datos.id &&
+        (usuario.username.toLowerCase() === username.toLowerCase() ||
+          usuario.email.toLowerCase() === email.toLowerCase()),
+    );
+
+    if (repetido) {
+      this.errorFormulario = 'Ya existe una cuenta con ese usuario o correo.';
+      return;
+    }
+
+    if (this.creandoCuenta) {
+      const nuevoId = Math.max(0, ...this.usuarios.map((usuario) => usuario.id)) + 1;
+      this.usuarios.push({ ...datos, id: nuevoId, username, email });
+      this.filtro = '';
+    } else {
+      const usuario = this.usuarios.find((cuenta) => cuenta.id === datos.id);
+      if (!usuario) return;
+
+      usuario.username = username;
+      usuario.email = email;
+      usuario.role = datos.role;
+    }
+
+    this.cancelarEdicion();
   }
 
   get usuariosFiltrados(): UsuarioAdmin[] {

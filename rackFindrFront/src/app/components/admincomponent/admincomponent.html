@@ -12,13 +12,18 @@
       [(ngModel)]="filtro"
       placeholder="Ej. cliente.demo"
     />
+
+    <button type="button" class="boton-estado" (click)="nuevaCuenta()">
+      Nueva cuenta
+    </button>
+
     @if (usuarioEnEdicion; as editado) {
       <form
         class="formulario-edicion"
         #formEdicion="ngForm"
-        (ngSubmit)="guardarEdicion()"
+        (ngSubmit)="formEdicion.valid && editado.username.trim() && guardarCuenta()"
       >
-        <h3>Editar cuenta</h3>
+        <h3>{{ creandoCuenta ? 'Nueva cuenta' : 'Editar cuenta' }}</h3>
         <label for="editar-usuario">Usuario</label>
         <input
           id="editar-usuario"
@@ -42,13 +47,17 @@
           <option value="USER">Cliente</option>
           <option value="ADMIN">Administrador</option>
         </select>
+        @if (errorFormulario){
+          <p role="alert">{{ errorFormulario }}</p>
+        }
+
         <div class="acciones-edicion">
           <button
             type="submit"
             class="boton-estado"
             [disabled]="formEdicion.invalid || !editado.username.trim()"
           >
-            Guardar cambios
+            {{ creandoCuenta ? 'Crear cuenta' : 'Guardar cambios' }}
           </button>
 
           <button type="button" class="boton-estado" (click)="cancelarEdicion()">
