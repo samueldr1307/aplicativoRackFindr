@@ -192,3 +192,11 @@ td .boton-estado + .boton-estado {
   height: 0.75rem;
   border-radius: 50%;
 }
+
+.segmento-npm{
+  background: #cb3837;
+}
+
+.segmento-maven {
+  background: var(--dorado, #d4a24c);
+}

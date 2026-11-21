@@ -1,28 +1,24 @@
-import{Injectable, signal} from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs';
+import { URL_BACK } from './api';
 
-interface BusquedaGuardada{
+export interface BusquedaGuardada {
   id: number;
   consulta: string;
-  ecosistema: 'npm' | 'maven';
-  fecha: Date;
+  ecosistema: string;
+  fecha: string;
 }
-@Injectable({
-  providedIn: 'root',
-})
+
+@Injectable({ providedIn: 'root' })
 export class HistorialService {
-  private siguienteId = 1;
-  private readonly registros = signal<BusquedaGuardada[]>([]);
+  constructor(private http: HttpClient) {}
 
-  readonly busquedas = this.registros.asReadonly();
-
-  guardar(consulta: string, ecosistema: 'npm' | 'maven'): void {
-    const busqueda: BusquedaGuardada = {
-      id: this.siguienteId++,
-      consulta,
-      ecosistema,
-      fecha: new Date(),
-    };
-
-    this.registros.update((anteriores) => [busqueda, ...anteriores]);
+  consultar(token: string) {
+    return this.http
+      .get<BusquedaGuardada[] | null>(`${URL_BACK}/solicitud/mis-solicitudes`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .pipe(map((lista) => [...(lista ?? [])].sort((a, b) => b.fecha.localeCompare(a.fecha))));
   }
 }

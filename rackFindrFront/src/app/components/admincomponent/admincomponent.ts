@@ -1,133 +1,176 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AdminService, Auditoria, Estadisticas, UsuarioAdmin } from '../../services/admin.service';
 
-interface UsuarioAdmin {
-  id: number;
-  username: string;
-  email: string;
-  role: string;
-  activo: boolean;
-}
+type Seccion = 'usuarios' | 'estadisticas' | 'auditoria';
+
 @Component({
   selector: 'app-admincomponent',
   standalone: false,
-  styleUrl: './admincomponent.css',
   templateUrl: './admincomponent.html',
+  styleUrl: './admincomponent.css',
 })
-export class Admincomponent {
+export class Admincomponent implements OnInit {
+  constructor(private api: AdminService) {}
+
+  usuarios = signal<UsuarioAdmin[]>([]);
+  estadisticas = signal<Estadisticas | null>(null);
+  auditorias = signal<Auditoria[]>([]);
+
+  estado = signal<Record<Seccion, string>>({
+    usuarios: '',
+    estadisticas: '',
+    auditoria: '',
+  });
+
+  guardando = signal(false);
+  errorOperacion = signal('');
+
   filtro = '';
+  filtroUsuario = '';
+  filtroAccion = '';
   usuarioEnEdicion: UsuarioAdmin | null = null;
   creandoCuenta = false;
-  errorFormulario = '';
+  password = '';
 
-  usuarios: UsuarioAdmin[] = [
-    {
-      id: 1,
-      username: 'admin.demo',
-      email: 'admin@example.com',
-      role: 'ADMIN',
-      activo: true,
-    },
-    {
-      id: 2,
-      username: 'cliente.demo',
-      email: 'cliente@example.com',
-      role: 'USER',
-      activo: false,
-    },
-  ];
-
-  cambiarEstado(usuario: UsuarioAdmin) {
-    usuario.activo = !usuario.activo;
+  ngOnInit() {
+    this.recargar();
   }
-  eliminarUsuario(usuario: UsuarioAdmin) {
-    const confirmado = window.confirm(
-      `¿Eliminar la cuenta de ${usuario.username}? También se borrarán sus búsquedas.`,
-    );
 
-    if (!confirmado) return;
+  recargar() {
+    this.cargar('usuarios', this.api.usuarios(), (lista) => this.usuarios.set(lista));
+    this.cargar('estadisticas', this.api.estadisticas(), (datos) => this.estadisticas.set(datos));
+    this.cargar('auditoria', this.api.auditoria(), (lista) => this.auditorias.set(lista));
+  }
 
-    this.usuarios = this.usuarios.filter((cuenta) => cuenta.id !== usuario.id);
-    if (this.usuarioEnEdicion?.id === usuario.id) {
-      this.cancelarEdicion();
+  private cargar<T>(seccion: Seccion, peticion: Observable<T>, aplicar: (datos: T) => void) {
+    this.estado.update((actual) => ({ ...actual, [seccion]: 'Cargando…' }));
+
+    peticion.subscribe({
+      next: (datos) => {
+        aplicar(datos);
+        this.estado.update((actual) => ({ ...actual, [seccion]: '' }));
+      },
+      error: (error) => {
+        this.estado.update((actual) => ({ ...actual, [seccion]: this.mensaje(error) }));
+      },
+    });
+  }
+
+  private mensaje(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 0) return 'No se pudo conectar con el servidor.';
+      if (error.status === 401) return 'Inicia sesión de nuevo.';
+      if (error.status === 403) return 'Tu cuenta no tiene permiso para esta operación.';
+      if (error.status === 406)
+        return 'No se pudo crear la cuenta. Revisa si el usuario ya existe.';
+      return `La solicitud falló (HTTP ${error.status}).`;
     }
+
+    return error instanceof Error ? error.message : 'No se pudo completar la operación.';
   }
 
-  nuevaCuenta(): void {
+  get usuariosFiltrados() {
+    const texto = this.filtro.trim().toLowerCase();
+    return this.usuarios().filter(
+      (usuario) =>
+        usuario.username.toLowerCase().includes(texto) ||
+        (usuario.email ?? '').toLowerCase().includes(texto),
+    );
+  }
+
+  get auditoriasFiltradas() {
+    const usuario = this.filtroUsuario.trim().toLowerCase();
+    const accion = this.filtroAccion.trim().toLowerCase();
+
+    return this.auditorias().filter(
+      (registro) =>
+        (registro.username ?? '').toLowerCase().includes(usuario) &&
+        (registro.accion ?? '').toLowerCase().includes(accion),
+    );
+  }
+
+  nuevaCuenta() {
+    this.errorOperacion.set('');
     this.creandoCuenta = true;
-    this.errorFormulario = '';
+    this.password = '';
     this.usuarioEnEdicion = {
       id: 0,
       username: '',
       email: '',
       role: 'USER',
-      activo: true,
+      enabled: true,
     };
   }
 
-  editarUsuario(usuario: UsuarioAdmin): void {
+  editarUsuario(usuario: UsuarioAdmin) {
+    this.errorOperacion.set('');
     this.creandoCuenta = false;
-    this.errorFormulario = '';
-    this.usuarioEnEdicion = { ...usuario };
+    this.password = '';
+    this.usuarioEnEdicion = { ...usuario, email: usuario.email ?? '' };
   }
 
-  cancelarEdicion(): void {
+  cancelarEdicion() {
     this.usuarioEnEdicion = null;
     this.creandoCuenta = false;
-    this.errorFormulario = '';
+    this.password = '';
   }
 
-  guardarCuenta(): void {
-    const datos = this.usuarioEnEdicion;
-    if (!datos) return;
+  guardarCuenta() {
+    if (!this.usuarioEnEdicion || this.guardando()) return;
 
-    const username = datos.username.trim();
-    const email = datos.email.trim();
+    const cuenta = { ...this.usuarioEnEdicion };
+    cuenta.username = cuenta.username.trim();
+    cuenta.email = cuenta.email.trim();
 
-    const repetido = this.usuarios.some(
+    const repetido = this.usuarios().some(
       (usuario) =>
-        usuario.id !== datos.id &&
-        (usuario.username.toLowerCase() === username.toLowerCase() ||
-          usuario.email.toLowerCase() === email.toLowerCase()),
+        usuario.id !== cuenta.id &&
+        (usuario.username.toLowerCase() === cuenta.username.toLowerCase() ||
+          (usuario.email ?? '').toLowerCase() === cuenta.email.toLowerCase()),
     );
 
     if (repetido) {
-      this.errorFormulario = 'Ya existe una cuenta con ese usuario o correo.';
+      this.errorOperacion.set('Ya existe una cuenta con ese usuario o correo.');
       return;
     }
 
-    if (this.creandoCuenta) {
-      const nuevoId = Math.max(0, ...this.usuarios.map((usuario) => usuario.id)) + 1;
-      this.usuarios.push({ ...datos, id: nuevoId, username, email });
-      this.filtro = '';
-    } else {
-      const usuario = this.usuarios.find((cuenta) => cuenta.id === datos.id);
-      if (!usuario) return;
+    const peticion = this.creandoCuenta
+      ? this.api.crear(cuenta, this.password)
+      : this.api.editar(cuenta);
 
-      usuario.username = username;
-      usuario.email = email;
-      usuario.role = datos.role;
-    }
-
-    this.cancelarEdicion();
+    this.ejecutar(peticion);
   }
 
-  get totalActivos(): number {
-    return this.usuarios.filter((usuario) => usuario.activo).length;
-  }
-  get totalInactivos(): number {
-    return this.usuarios.length - this.totalActivos;
-  }
-  get totalAdministradores(): number{
-    return this.usuarios.filter((usuario) => usuario.role === 'ADMIN').length
+  cambiarEstado(usuario: UsuarioAdmin) {
+    this.ejecutar(this.api.cambiarEstado(usuario));
   }
 
-  get usuariosFiltrados(): UsuarioAdmin[] {
-    const texto = this.filtro.trim().toLowerCase();
-    if (!texto) return this.usuarios;
-    return this.usuarios.filter(
-      (usuario) =>
-        usuario.username.toLowerCase().includes(texto) ||
-        usuario.email.toLowerCase().includes(texto),
+  eliminarUsuario(usuario: UsuarioAdmin) {
+    const confirmado = window.confirm(
+      `¿Eliminar la cuenta de ${usuario.username}? También se borrarán sus búsquedas.`,
     );
+    if (confirmado) this.ejecutar(this.api.eliminar(usuario.id));
+  }
+
+  private ejecutar(peticion: Observable<unknown>) {
+    if (this.guardando()) return;
+
+    this.guardando.set(true);
+    this.errorOperacion.set('');
+
+    peticion.subscribe({
+      next: () => {
+        if (this.creandoCuenta) this.filtro = '';
+        this.cancelarEdicion();
+        this.guardando.set(false);
+        this.recargar();
+      },
+      error: (error) => {
+        this.errorOperacion.set(this.mensaje(error));
+        this.guardando.set(false);
+      },
+    });
   }
 }
