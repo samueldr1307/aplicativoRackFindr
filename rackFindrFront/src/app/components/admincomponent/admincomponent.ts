@@ -15,6 +15,7 @@ interface  UsuarioAdmin {
 })
 export class Admincomponent {
   filtro = '';
+  usuarioEnEdicion: UsuarioAdmin | null = null;
 
   usuarios: UsuarioAdmin[] = [
     {
@@ -33,16 +34,36 @@ export class Admincomponent {
     },
   ];
 
-cambiarEstado(usuario: UsuarioAdmin) {
-  usuario.activo = !usuario.activo;
-}
+  cambiarEstado(usuario: UsuarioAdmin) {
+    usuario.activo = !usuario.activo;
+  }
 
-  get usuariosFiltrados(): UsuarioAdmin[]{
+  editarUsuario(usuario: UsuarioAdmin) {
+    this.usuarioEnEdicion = { ...usuario };
+  }
+  cancelarEdicion(): void {
+    this.usuarioEnEdicion = null;
+  }
+  guardarEdicion(): void {
+    const editado = this.usuarioEnEdicion;
+    if (!editado) return;
+
+    const usuario = this.usuarios.find((cuenta) => cuenta.id === editado.id);
+    if (!usuario) return;
+
+    usuario.username = editado.username.trim();
+    usuario.email = editado.email.trim();
+    usuario.role = editado.role;
+
+    this.usuarioEnEdicion = null;
+  }
+
+  get usuariosFiltrados(): UsuarioAdmin[] {
     const texto = this.filtro.trim().toLowerCase();
-    if(!texto)return this.usuarios;
+    if (!texto) return this.usuarios;
     return this.usuarios.filter(
       (usuario) =>
-        usuario.username.toLowerCase().includes(texto)||
+        usuario.username.toLowerCase().includes(texto) ||
         usuario.email.toLowerCase().includes(texto),
     );
   }
