@@ -1,0 +1,78 @@
+<section class="portada">
+  <div class="logos">
+    <span class="logo"><img src="logos/npm.svg" alt="npm" width="38" height="38"/></span>
+    <span class="logo2"><img src="logos/maven.svg" alt="Maven" width="38" height="38"/></span>
+  </div>
+
+  <h1 class="titulo">Encuentra la librería correcta en segundos</h1>
+  <p class="texto">Busca librerías de npm y dependencias de Maven en un solo lugar.</p>
+
+  <div class="botones">
+    <a class="botondorado" routerLink="/registro">Crear cuenta</a>
+    <a class="botonborde" routerLink="/login">Iniciar sesión</a>
+  </div>
+</section>
+
+<section class="seccion">
+  <h2 class="encabezado">¿Qué puedes hacer?</h2>
+  <div class="grupo">
+    @for (f of funciones; track f.titulo) {
+      <div class="tarjeta">
+        <h3 class="tarjetatitulo">{{ f.titulo }}</h3>
+        <p class="tarjetatexto">{{ f.texto }}</p>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="seccion">
+  <h2 class="encabezado">Cómo funciona</h2>
+  <ol class="pasos">
+    @for (p of pasos; track p; let i = $index) {
+      <li class="paso">
+        <span class="numero">{{ i + 1 }}</span>
+        <span>{{ p }}</span>
+      </li>
+    }
+  </ol>
+</section>
+
+<section class="seccion">
+  <h2 class="encabezado">Así se ve el buscador</h2>
+  <div class="vista">
+    <div class="buscador" aria-hidden="true">
+      <div class="pestanas">
+        <span class="pestanaactiva">npm (Angular)</span>
+        <span class="pestana">Maven (Spring Boot)</span>
+      </div>
+      <div class="fila">
+        <span class="campo">Ej: librerías de animaciones</span>
+        <span class="buscar">Buscar</span>
+      </div>
+      <div class="linea"></div>
+      <div class="lineacorta"></div>
+    </div>
+
+    <div class="aviso">
+      <span>Inicia sesión para buscar</span>
+      <a class="botonborde" routerLink="/login">Iniciar sesión</a>
+    </div>
+  </div>
+</section>
+
+<section class="seccion">
+  <div class="grupo">
+    @for (e of ecosistemas; track e.nombre) {
+      <div class="tarjeta">
+        <h3 class="tarjetatitulo">{{ e.nombre }}</h3>
+        <p class="tarjetatexto">{{ e.texto }}</p>
+      </div>
+    }
+  </div>
+  <a class="enlace" routerLink="/instalacion">¿Primera vez con npm? Lee la guía de instalación →</a>
+</section>
+
+<section class="final">
+  <h2 class="encabezado">Empieza a buscar hoy</h2>
+  <a class="botondorado" routerLink="/registro">Crear cuenta</a>
+</section>
