@@ -26,6 +26,29 @@
           <dd>{{ totalAdministradores }}</dd>
         </div>
       </dl>
+      <figure class="grafica-estado">
+        <figcaption>Distribución por estado de cuenta</figcaption>
+
+        @if (usuarios.length > 0) {
+          <div class="barra-estado" aria-hidden="true">
+            <span class="segmento-activo" [style.flex-grow]="totalActivos"></span>
+            <span class="segmento-inactivo" [style.flex-grow]="totalInactivos"></span>
+          </div>
+
+          <ul class="leyenda-estado">
+            <li>
+              <span class="muestra segmento-activo" aria-hidden="true"></span>
+              Activos: {{ totalActivos }} de {{ usuarios.length }}
+            </li>
+            <li>
+              <span class="muestra segmento-inactivo" aria-hidden="true"></span>
+              Inactivos: {{ totalInactivos }} de {{ usuarios.length }}
+            </li>
+          </ul>
+        } @else {
+          <p class="nota">No hay cuentas para mostrar en la gráfica.</p>
+        }
+      </figure>
     </section>
     <h2 id="titulo-usuarios">Gestión de usuarios</h2>
     <p class="nota">Mostrando cuentas de ejemplo.</p>
