@@ -16,15 +16,15 @@
   margin-bottom: 1rem;
 }
 
-.cabecera h1 {
-  font-size: clamp(1.75rem, 4vw, 2.4rem);
+.titulo {
+  font-size: 2.2rem;
   margin-bottom: 0.75rem;
 }
 
-.intro {
-  color: var(--texto-suave, #9aa0ac);
+.texto {
   max-width: 560px;
   margin: 0 auto;
+  color: var(--texto-suave);
 }
 
 .pasos {
@@ -37,77 +37,69 @@
 
 .paso {
   display: flex;
+  flex-wrap: wrap;
   gap: 1.25rem;
   padding: 1.5rem;
-  background: var(--superficie, #10131a);
-  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  background: var(--superficie);
+  border: 1px solid var(--borde);
   border-radius: 14px;
 }
 
 .numero {
-  flex: 0 0 auto;
   width: 38px;
   height: 38px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background: var(--degradado, linear-gradient(135deg, #d4a24c 0%, #f0c27a 100%));
+  background: var(--degradado);
   color: #0b0d12;
   font-weight: 700;
 }
 
 .cuerpo {
-  flex: 1;
+  flex: 1 1 260px;
   min-width: 0;
 }
 
-.cuerpo h2 {
+.pasotitulo {
   font-size: 1.25rem;
   margin: 0.3rem 0 0.5rem;
 }
 
-.cuerpo p {
-  color: var(--texto-suave, #9aa0ac);
+.pasotexto {
   margin-bottom: 1rem;
+  color: var(--texto-suave);
 }
 
-.cuerpo .nota {
+.nota {
+  margin-bottom: 1rem;
   padding: 0.75rem 1rem;
   font-size: 0.92rem;
-  color: var(--dorado-claro, #f0c27a);
+  color: var(--dorado-claro);
   background: rgba(212, 162, 76, 0.08);
-  border-left: 3px solid var(--dorado, #d4a24c);
-  border-radius: 6px;
+  border-left: 3px solid var(--dorado);
 }
 
-figure {
+.figura {
   margin: 0;
   text-align: center;
 }
 
-figure img {
+.captura {
   max-width: 100%;
   height: auto;
-  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--borde);
   border-radius: 10px;
 }
 
-.volver {
+.enlace {
   display: inline-block;
   margin-top: 2.5rem;
-  color: var(--dorado, #d4a24c);
+  color: var(--dorado);
   text-decoration: none;
 }
 
-.volver:hover {
-  color: var(--dorado-claro, #f0c27a);
-}
-
-@media (max-width: 640px) {
-  .paso {
-    flex-direction: column;
-    gap: 0.75rem;
-    padding: 1.15rem;
-  }
+.enlace:hover {
+  color: var(--dorado-claro);
 }

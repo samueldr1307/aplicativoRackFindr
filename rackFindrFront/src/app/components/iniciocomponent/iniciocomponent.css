@@ -1,0 +1,269 @@
+:host {
+  display: block;
+}
+
+.portada {
+  text-align: center;
+  padding: 1rem 0 3rem;
+}
+
+.logos {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--superficie);
+  border: 1px solid var(--dorado);
+  box-shadow: 0 0 24px rgba(212, 162, 76, 0.25);
+  animation: flotar 4s ease-in-out infinite;
+}
+
+.logo2 {
+  width: 84px;
+  height: 84px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--superficie);
+  border: 1px solid var(--dorado);
+  box-shadow: 0 0 24px rgba(212, 162, 76, 0.25);
+  animation: flotar 4s ease-in-out 0.6s infinite;
+}
+
+@keyframes flotar {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.titulo {
+  font-size: 2.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.texto {
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+  color: var(--texto-suave);
+}
+
+.botones {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.botondorado {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 7px;
+  background: #e6b35a;
+  color: #21190d;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.botondorado:hover {
+  background: #efc477;
+  color: #21190d;
+}
+
+.botonborde {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--borde-dorado);
+  border-radius: 8px;
+  color: var(--dorado);
+  text-decoration: none;
+}
+
+.botonborde:hover {
+  border-color: var(--dorado);
+  color: var(--dorado-claro);
+}
+
+.seccion {
+  padding: 2rem 0;
+  border-top: 1px solid var(--borde);
+}
+
+.encabezado {
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.grupo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.tarjeta {
+  padding: 1.25rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+}
+
+.tarjetatitulo {
+  font-size: 1.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.tarjetatexto {
+  margin: 0;
+  color: var(--texto-suave);
+  font-size: 0.95rem;
+}
+
+.pasos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.paso {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--texto-suave);
+}
+
+.numero {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--degradado);
+  color: #0b0d12;
+  font-weight: 700;
+}
+
+.vista {
+  position: relative;
+}
+
+.buscador {
+  padding: 1.25rem;
+  background: var(--superficie);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+}
+
+.pestanas {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pestana {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+.pestanaactiva {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--dorado);
+  border-radius: 6px;
+  background: var(--dorado);
+  color: #0b0d12;
+  font-size: 0.9rem;
+}
+
+.fila {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.campo {
+  flex: 1;
+  padding: 0.6rem 0.75rem;
+  background: var(--fondo);
+  border: 1px solid var(--borde);
+  border-radius: 7px;
+  color: var(--texto-suave);
+  font-size: 0.9rem;
+}
+
+.buscar {
+  padding: 0.6rem 1rem;
+  border-radius: 7px;
+  background: var(--dorado);
+  color: #0b0d12;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.linea {
+  height: 10px;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.lineacorta {
+  width: 65%;
+  height: 10px;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.aviso {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border-radius: 12px;
+  background: rgba(11, 13, 18, 0.75);
+  color: var(--dorado-claro);
+}
+
+.enlace {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: var(--dorado);
+  text-decoration: none;
+}
+
+.enlace:hover {
+  color: var(--dorado-claro);
+}
+
+.final {
+  text-align: center;
+  padding: 2.5rem 0 1rem;
+  border-top: 1px solid var(--borde);
+}

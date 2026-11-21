@@ -2,8 +2,8 @@
 
   <header class="cabecera">
     <img src="logos/npm.svg" alt="npm" width="56" height="56" class="logonpm"/>
-    <h1>Instalación de dependencias en WebStorm</h1>
-    <p class="intro">
+    <h1 class="titulo">Instalación de dependencias en WebStorm</h1>
+    <p class="texto">
       Guía paso a paso para instalar las librerías del proyecto con npm
       y ejecutar el servidor de Angular desde WebStorm.
     </p>
@@ -15,20 +15,20 @@
         <span class="numero">{{ i + 1 }}</span>
 
         <div class="cuerpo">
-          <h2>{{ paso.titulo }}</h2>
-          <p>{{ paso.texto }}</p>
+          <h2 class="pasotitulo">{{ paso.titulo }}</h2>
+          <p class="pasotexto">{{ paso.texto }}</p>
 
           @if (paso.nota) {
             <p class="nota">{{ paso.nota }}</p>
           }
 
-          <figure>
-            <img [src]="paso.imagen" [alt]="paso.alt" loading="lazy"/>
+          <figure class="figura">
+            <img class="captura" [src]="paso.imagen" [alt]="paso.alt" loading="lazy"/>
           </figure>
         </div>
       </li>
     }
   </ol>
 
-  <a class="volver" routerLink="/">← Volver a buscar librerías</a>
+  <a class="enlace" routerLink="/">← Volver al inicio</a>
 </section>
