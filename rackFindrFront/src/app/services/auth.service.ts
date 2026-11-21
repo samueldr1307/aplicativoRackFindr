@@ -50,6 +50,11 @@ export class AuthService {
     localStorage.setItem('role', role);
     this.haySesion.set(true);
   }
+
+  esAdmin(): boolean{
+    const rol = localStorage.getItem('rol')?.trim().toUpperCase();
+    return this.haySesion() && (rol === 'ADMIN' || rol === 'ROLE_ADMIN');
+  }
   cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
