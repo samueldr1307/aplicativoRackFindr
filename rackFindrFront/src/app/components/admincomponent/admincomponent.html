@@ -12,6 +12,61 @@
       [(ngModel)]="filtro"
       placeholder="Ej. cliente.demo"
     />
+
+    <button type="button" class="boton-estado" (click)="nuevaCuenta()">
+      Nueva cuenta
+    </button>
+
+    @if (usuarioEnEdicion; as editado) {
+      <form
+        class="formulario-edicion"
+        #formEdicion="ngForm"
+        (ngSubmit)="formEdicion.valid && editado.username.trim() && guardarCuenta()"
+      >
+        <h3>{{ creandoCuenta ? 'Nueva cuenta' : 'Editar cuenta' }}</h3>
+        <label for="editar-usuario">Usuario</label>
+        <input
+          id="editar-usuario"
+          class="campo"
+          name="username"
+          [(ngModel)]="editado.username"
+          required
+        />
+        <label for="editar-correo">Correo</label>
+        <input
+          id="editar-correo"
+          class="campo"
+          type="email"
+          name="email"
+          [(ngModel)]="editado.email"
+          required
+          email
+        />
+        <label for="editar-rol">Rol</label>
+        <select id="editar-rol" class="campo" name="role" [(ngModel)]="editado.role">
+          <option value="USER">Cliente</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+        @if (errorFormulario){
+          <p role="alert">{{ errorFormulario }}</p>
+        }
+
+        <div class="acciones-edicion">
+          <button
+            type="submit"
+            class="boton-estado"
+            [disabled]="formEdicion.invalid || !editado.username.trim()"
+          >
+            {{ creandoCuenta ? 'Crear cuenta' : 'Guardar cambios' }}
+          </button>
+
+          <button type="button" class="boton-estado" (click)="cancelarEdicion()">
+            Cancelar
+          </button>
+
+        </div>
+      </form>
+    }
     <div class="contenedor-tabla">
       <table aria-labelledby="Titulo-usuarios">
         <thead>
@@ -31,13 +86,19 @@
               <td>{{ usuario.role }}</td>
               <td>{{ usuario.activo ? 'Activa' : 'Inactiva' }}</td>
               <td>
+                <button type="button" class="boton-estado" (click)="editarUsuario(usuario)">
+                  Editar
+                </button>
                 <button
                   type="button"
                   class="boton-estado"
                   (click)="cambiarEstado(usuario)"
                   [attr.aria-label]="(usuario.activo ? 'Desactivar a ' : 'Activar a ') + usuario.username"
                 >
-                  {{usuario.activo ? ' Desactivar  ' : ' Activar  ' }}
+                  {{ usuario.activo ? ' Desactivar  ' : ' Activar  ' }}
+                </button>
+                <button type="button" class="boton-estado" (click)="eliminarUsuario(usuario)">
+                  Eliminar
                 </button>
               </td>
             </tr>
