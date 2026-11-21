@@ -1,194 +1,319 @@
 <section class="admin">
   <h1>Panel de Administración</h1>
 
-  <section aria-labelledby="titulo-usuarios">
-    <section aria-labelledby="titulo-resumen">
-      <h2 id="titulo-resumen">Resumen de uso</h2>
+  <button
+    type="button"
+    class="boton-estado"
+    (click)="recargar()"
+    [disabled]="guardando()
+      || estado().usuarios === 'Cargando…'
+      || estado().estadisticas === 'Cargando…'
+      || estado().auditoria === 'Cargando…'"
+  >
+    Actualizar datos
+  </button>
 
+  <section aria-labelledby="titulo-resumen">
+    <h2 id="titulo-resumen">Resumen de uso</h2>
+
+    @if (estado().estadisticas) {
+      <p role="status">{{ estado().estadisticas }}</p>
+    } @else if (estadisticas(); as stats) {
       <dl class="resumen-usuarios">
         <div class="tarjeta-resumen">
           <dt>Usuarios totales</dt>
-          <dd>{{ usuarios.length }}</dd>
+          <dd>{{ stats.totalUsuarios }}</dd>
         </div>
 
         <div class="tarjeta-resumen">
           <dt>Activos</dt>
-          <dd>{{ totalActivos }}</dd>
+          <dd>{{ stats.usuariosActivos }}</dd>
         </div>
 
         <div class="tarjeta-resumen">
           <dt>Inactivos</dt>
-          <dd>{{ totalInactivos }}</dd>
+          <dd>{{ stats.usuariosInactivos }}</dd>
         </div>
 
         <div class="tarjeta-resumen">
           <dt>Administradores</dt>
-          <dd>{{ totalAdministradores }}</dd>
+          <dd>{{ stats.totalAdministradores }}</dd>
         </div>
 
         <div class="tarjeta-resumen">
           <dt>Búsquedas totales</dt>
-          <dd>{{ totalBusquedas }}</dd>
+          <dd>{{ stats.totalSolicitudes }}</dd>
         </div>
       </dl>
+
       <figure class="grafica-estado">
         <figcaption>Distribución por estado de cuenta</figcaption>
 
-        @if (usuarios.length > 0) {
+        @if (stats.totalUsuarios > 0) {
           <div class="barra-estado" aria-hidden="true">
-            <span class="segmento-activo" [style.flex-grow]="totalActivos"></span>
-            <span class="segmento-inactivo" [style.flex-grow]="totalInactivos"></span>
+            <span class="segmento-activo" [style.flex-grow]="stats.usuariosActivos"></span>
+            <span class="segmento-inactivo" [style.flex-grow]="stats.usuariosInactivos"></span>
           </div>
 
           <ul class="leyenda-estado">
             <li>
               <span class="muestra segmento-activo" aria-hidden="true"></span>
-              Activos: {{ totalActivos }} de {{ usuarios.length }}
+              Activos: {{ stats.usuariosActivos }} de {{ stats.totalUsuarios }}
             </li>
             <li>
               <span class="muestra segmento-inactivo" aria-hidden="true"></span>
-              Inactivos: {{ totalInactivos }} de {{ usuarios.length }}
+              Inactivos: {{ stats.usuariosInactivos }} de {{ stats.totalUsuarios }}
             </li>
           </ul>
         } @else {
           <p class="nota">No hay cuentas para mostrar en la gráfica.</p>
         }
-
       </figure>
+
       <figure class="grafica-estado">
         <figcaption>Búsquedas por ecosistema</figcaption>
-        <p class="nota">Datos de ejemplo.</p>
 
-        @if (totalBusquedas > 0) {
+        @if (stats.solicitudesNpm + stats.solicitudesMaven > 0) {
           <div class="barra-estado" aria-hidden="true">
-            <span class="segmento-npm" [style.flex-grow]="busquedasPorEcosistema.npm"></span>
-            <span class="segmento-maven" [style.flex-grow]="busquedasPorEcosistema.maven"></span>
+            <span class="segmento-npm" [style.flex-grow]="stats.solicitudesNpm"></span>
+            <span class="segmento-maven" [style.flex-grow]="stats.solicitudesMaven"></span>
           </div>
 
           <ul class="leyenda-estado">
             <li>
               <span class="muestra segmento-npm" aria-hidden="true"></span>
-              npm: {{ busquedasPorEcosistema.npm }}
+              npm: {{ stats.solicitudesNpm }}
             </li>
             <li>
               <span class="muestra segmento-maven" aria-hidden="true"></span>
-              Maven: {{ busquedasPorEcosistema.maven }}
+              Maven: {{ stats.solicitudesMaven }}
             </li>
           </ul>
         } @else {
-          <p class="nota">No hay búsquedas para mostrar.</p>
+          <p class="nota">No hay búsquedas de npm o Maven para mostrar.</p>
         }
       </figure>
-    </section>
+
+      <figure class="grafica-estado">
+        <figcaption>Inicios de sesión</figcaption>
+
+        @if (stats.iniciosSesionExitosos + stats.iniciosSesionFallidos > 0) {
+          <div class="barra-estado" aria-hidden="true">
+            <span class="segmento-activo" [style.flex-grow]="stats.iniciosSesionExitosos"></span>
+            <span class="segmento-inactivo" [style.flex-grow]="stats.iniciosSesionFallidos"></span>
+          </div>
+
+          <ul class="leyenda-estado">
+            <li>
+              <span class="muestra segmento-activo" aria-hidden="true"></span>
+              Exitosos: {{ stats.iniciosSesionExitosos }}
+            </li>
+            <li>
+              <span class="muestra segmento-inactivo" aria-hidden="true"></span>
+              Fallidos: {{ stats.iniciosSesionFallidos }}
+            </li>
+          </ul>
+        } @else {
+          <p class="nota">Todavía no hay intentos de inicio de sesión registrados.</p>
+        }
+      </figure>
+    }
+  </section>
+
+  <section aria-labelledby="titulo-usuarios">
     <h2 id="titulo-usuarios">Gestión de usuarios</h2>
-    <p class="nota">Mostrando cuentas de ejemplo.</p>
-    <label for="filtro-usuarios">Buscar por usuario o correo</label>
-    <input
-      id="filtro-usuarios"
-      class="campo"
-      type="search"
-      [(ngModel)]="filtro"
-      placeholder="Ej. cliente.demo"
-    />
 
-    <button type="button" class="boton-estado" (click)="nuevaCuenta()">
-      Nueva cuenta
-    </button>
+    @if (estado().usuarios) {
+      <p role="status">{{ estado().usuarios }}</p>
+    } @else {
+      @if (errorOperacion()) {
+        <p role="alert">{{ errorOperacion() }}</p>
+      }
 
-    @if (usuarioEnEdicion; as editado) {
-      <form
-        class="formulario-edicion"
-        #formEdicion="ngForm"
-        (ngSubmit)="formEdicion.valid && editado.username.trim() && guardarCuenta()"
-      >
-        <h3>{{ creandoCuenta ? 'Nueva cuenta' : 'Editar cuenta' }}</h3>
-        <label for="editar-usuario">Usuario</label>
+      <fieldset class="controles-usuarios" [disabled]="guardando()" aria-labelledby="titulo-usuarios">
+        <label for="filtro-usuarios">Buscar por usuario o correo</label>
         <input
-          id="editar-usuario"
+          id="filtro-usuarios"
           class="campo"
-          name="username"
-          [(ngModel)]="editado.username"
-          required
+          type="search"
+          [(ngModel)]="filtro"
+          placeholder="Usuario o correo"
         />
-        <label for="editar-correo">Correo</label>
-        <input
-          id="editar-correo"
-          class="campo"
-          type="email"
-          name="email"
-          [(ngModel)]="editado.email"
-          required
-          email
-        />
-        <label for="editar-rol">Rol</label>
-        <select id="editar-rol" class="campo" name="role" [(ngModel)]="editado.role">
-          <option value="USER">Cliente</option>
-          <option value="ADMIN">Administrador</option>
-        </select>
-        @if (errorFormulario) {
-          <p role="alert">{{ errorFormulario }}</p>
+
+        <button type="button" class="boton-estado" (click)="nuevaCuenta()">
+          Nueva cuenta
+        </button>
+
+        @if (usuarioEnEdicion; as editado) {
+          <form
+            class="formulario-edicion"
+            #formEdicion="ngForm"
+            (ngSubmit)="formEdicion.valid && editado.username.trim() && guardarCuenta()"
+          >
+            <h3>{{ creandoCuenta ? 'Nueva cuenta' : 'Editar cuenta' }}</h3>
+
+            <label for="editar-usuario">Usuario</label>
+            <input
+              id="editar-usuario"
+              class="campo"
+              name="username"
+              [(ngModel)]="editado.username"
+              required
+            />
+
+            <label for="editar-correo">Correo</label>
+            <input
+              id="editar-correo"
+              class="campo"
+              type="email"
+              name="email"
+              [(ngModel)]="editado.email"
+              required
+              email
+            />
+
+            @if (creandoCuenta) {
+              <label for="clave-nueva">Contraseña inicial</label>
+              <input
+                id="clave-nueva"
+                class="campo"
+                type="password"
+                name="password"
+                autocomplete="new-password"
+                [(ngModel)]="password"
+                required
+              />
+            }
+
+            <label for="editar-rol">Rol</label>
+            <select id="editar-rol" class="campo" name="role" [(ngModel)]="editado.role">
+              <option value="USER">Cliente</option>
+              <option value="ADMIN">Administrador</option>
+            </select>
+
+            <div class="acciones-edicion">
+              <button
+                type="submit"
+                class="boton-estado"
+                [disabled]="formEdicion.invalid || !editado.username.trim()"
+              >
+                {{ creandoCuenta ? 'Crear cuenta' : 'Guardar cambios' }}
+              </button>
+
+              <button type="button" class="boton-estado" (click)="cancelarEdicion()">
+                Cancelar
+              </button>
+            </div>
+          </form>
         }
 
-        <div class="acciones-edicion">
-          <button
-            type="submit"
-            class="boton-estado"
-            [disabled]="formEdicion.invalid || !editado.username.trim()"
-          >
-            {{ creandoCuenta ? 'Crear cuenta' : 'Guardar cambios' }}
-          </button>
+        <div class="contenedor-tabla">
+          <table aria-labelledby="titulo-usuarios">
+            <thead>
+            <tr>
+              <th scope="col">Usuario</th>
+              <th scope="col">Correo</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+              @for (usuario of usuariosFiltrados; track usuario.id) {
+                <tr>
+                  <td>{{ usuario.username }}</td>
+                  <td>{{ usuario.email }}</td>
+                  <td>{{ usuario.role }}</td>
+                  <td>{{ usuario.enabled ? 'Activa' : 'Inactiva' }}</td>
+                  <td>
+                    <button type="button" class="boton-estado" (click)="editarUsuario(usuario)">
+                      Editar
+                    </button>
 
-          <button type="button" class="boton-estado" (click)="cancelarEdicion()">
-            Cancelar
-          </button>
+                    <button
+                      type="button"
+                      class="boton-estado"
+                      (click)="cambiarEstado(usuario)"
+                      aria-label="{{ usuario.enabled ? 'Desactivar' : 'Activar' }} a {{ usuario.username }}"
+                    >
+                      {{ usuario.enabled ? 'Desactivar' : 'Activar' }}
+                    </button>
 
+                    <button type="button" class="boton-estado" (click)="eliminarUsuario(usuario)">
+                      Eliminar
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="vacio">
+                    {{ usuarios().length
+                    ? 'Ninguna cuenta coincide con tu búsqueda.'
+                    : 'No hay cuentas registradas.' }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
-      </form>
+      </fieldset>
     }
-    <div class="contenedor-tabla">
-      <table aria-labelledby="Titulo-usuarios">
-        <thead>
-        <tr>
-          <th scope="col">Usuario</th>
-          <th scope="col">Correo</th>
-          <th scope="col">Rol</th>
-          <th scope="col">Estado</th>
-          <th scope="col">Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-          @for (usuario of usuariosFiltrados; track usuario.id) {
-            <tr>
-              <td>{{ usuario.username }}</td>
-              <td>{{ usuario.email }}</td>
-              <td>{{ usuario.role }}</td>
-              <td>{{ usuario.activo ? 'Activa' : 'Inactiva' }}</td>
-              <td>
-                <button type="button" class="boton-estado" (click)="editarUsuario(usuario)">
-                  Editar
-                </button>
-                <button
-                  type="button"
-                  class="boton-estado"
-                  (click)="cambiarEstado(usuario)"
-                  [attr.aria-label]="(usuario.activo ? 'Desactivar a ' : 'Activar a ') + usuario.username"
-                >
-                  {{ usuario.activo ? ' Desactivar  ' : ' Activar  ' }}
-                </button>
-                <button type="button" class="boton-estado" (click)="eliminarUsuario(usuario)">
-                  Eliminar
-                </button>
-              </td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="5" class="vacio">
-                {{ usuarios.length ? 'Ninguna cuenta coincide con tu búsqueda.' : 'No hay cuentas registradas.' }}
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  </section>
+
+  <section aria-labelledby="titulo-auditoria">
+    <h2 id="titulo-auditoria">Auditoría</h2>
+
+    @if (estado().auditoria) {
+      <p role="status">{{ estado().auditoria }}</p>
+    } @else {
+      <label for="audit-usuario">Filtrar por usuario</label>
+      <input
+        id="audit-usuario"
+        class="campo"
+        type="search"
+        [(ngModel)]="filtroUsuario"
+      />
+
+      <label for="audit-accion">Filtrar por acción</label>
+      <input
+        id="audit-accion"
+        class="campo"
+        type="search"
+        [(ngModel)]="filtroAccion"
+      />
+
+      <div class="contenedor-tabla">
+        <table aria-labelledby="titulo-auditoria">
+          <thead>
+          <tr>
+            <th scope="col">Usuario</th>
+            <th scope="col">Acción</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Ciudad</th>
+            <th scope="col">País</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (registro of auditoriasFiltradas; track registro.id) {
+              <tr>
+                <td>{{ registro.username || 'Sin registrar' }}</td>
+                <td>{{ registro.accion || 'Sin registrar' }}</td>
+                <td>{{ (registro.fecha | date:'dd/MM/yyyy HH:mm:ss') || 'Sin registrar' }}</td>
+                <td>{{ registro.ciudad || 'Sin registrar' }}</td>
+                <td>{{ registro.pais || 'Sin registrar' }}</td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="vacio">
+                  {{ auditorias().length
+                  ? 'Ningún registro coincide con los filtros.'
+                  : 'No hay registros de auditoría.' }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
   </section>
 </section>

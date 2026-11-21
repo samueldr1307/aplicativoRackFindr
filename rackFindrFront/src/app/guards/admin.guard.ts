@@ -1,16 +1,14 @@
-import {inject} from '@angular/core';
-import {CanActivateFn, Router} from '@angular/router';
-import {AuthService} from '../services/auth.service';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 export const adminGuard: CanActivateFn = () => {
-  const authService = inject(AuthService);
+  const auth = inject(AuthService);
   const router = inject(Router);
 
-  if (!authService.haySesion()) {
+  if (!auth.haySesion()) {
     return router.createUrlTree(['/login']);
   }
-if(!authService.haySesion()) {
-  return router.createUrlTree(['/login']);
-}
-return router.createUrlTree(['/']);
+
+  return auth.esAdmin() ? true : router.createUrlTree(['/buscar']);
 };
