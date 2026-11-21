@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, computed,  signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AdminService, Auditoria, Estadisticas, UsuarioAdmin } from '../../services/admin.service';
@@ -17,6 +17,45 @@ export class Admincomponent implements OnInit {
   usuarios = signal<UsuarioAdmin[]>([]);
   estadisticas = signal<Estadisticas | null>(null);
   auditorias = signal<Auditoria[]>([]);
+  graficasAuditoria = computed(() => {
+    const acciones = new Map<string, number>();
+    const busquedas = new Map<string, number>();
+    const dias = new Map<string, number>();
+
+    for (const registro of this.auditorias()) {
+      const accion = registro.accion?.trim() || 'Sin acción registrada';
+      acciones.set(accion, (acciones.get(accion) ?? 0) + 1);
+
+      if (accion === 'BUSQUEDA_LIBRERIAS') {
+        const usuario = registro.username?.trim() || 'Sin usuario registrado';
+        busquedas.set(usuario, (busquedas.get(usuario) ?? 0) + 1);
+      }
+
+      if (registro.fecha) {
+        const dia = registro.fecha.slice(0, 10);
+        dias.set(dia, (dias.get(dia) ?? 0) + 1);
+      }
+    }
+
+    return [
+      this.prepararGrafica('Acciones registradas por tipo', acciones),
+      this.prepararGrafica('Búsquedas por usuario', busquedas),
+      this.prepararGrafica('Uso por día', dias, true),
+    ];
+  });
+
+  private prepararGrafica(titulo: string, conteos: Map<string, number>, porFecha = false) {
+    const filas = Array.from(conteos, ([etiqueta, cantidad]) => ({ etiqueta, cantidad }));
+
+    filas.sort((a, b) =>
+      porFecha
+        ? a.etiqueta.localeCompare(b.etiqueta)
+        : b.cantidad - a.cantidad || a.etiqueta.localeCompare(b.etiqueta),
+    );
+
+    const maximo = filas.reduce((mayor, fila) => Math.max(mayor, fila.cantidad), 1);
+    return { titulo, filas, maximo };
+  }
 
   estado = signal<Record<Seccion, string>>({
     usuarios: '',

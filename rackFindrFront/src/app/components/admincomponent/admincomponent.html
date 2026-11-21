@@ -266,7 +266,32 @@
     @if (estado().auditoria) {
       <p role="status">{{ estado().auditoria }}</p>
     } @else {
+      @for (grafica of graficasAuditoria(); track grafica.titulo) {
+        <figure class="grafica-estado">
+          <figcaption>{{ grafica.titulo }}</figcaption>
+
+          @if (grafica.filas.length > 0) {
+            <ul>
+              @for (fila of grafica.filas; track fila.etiqueta) {
+                <li>
+                  <span>{{ fila.etiqueta }}</span>
+                  <meter
+                    min="0"
+                    [max]="grafica.maximo"
+                    [value]="fila.cantidad"
+                    [attr.aria-label]="grafica.titulo + ': ' + fila.etiqueta"
+                  ></meter>
+                  <strong>{{ fila.cantidad }}</strong>
+                </li>
+              }
+            </ul>
+          } @else {
+            <p class="nota">Todavía no hay registros para esta gráfica.</p>
+          }
+        </figure>
+      }
       <label for="audit-usuario">Filtrar por usuario</label>
+
       <input
         id="audit-usuario"
         class="campo"
