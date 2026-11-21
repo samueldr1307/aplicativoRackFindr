@@ -33,6 +33,10 @@ export class Admincomponent {
     },
   ];
 
+cambiarEstado(usuario: UsuarioAdmin) {
+  usuario.activo = !usuario.activo;
+}
+
   get usuariosFiltrados(): UsuarioAdmin[]{
     const texto = this.filtro.trim().toLowerCase();
     if(!texto)return this.usuarios;
