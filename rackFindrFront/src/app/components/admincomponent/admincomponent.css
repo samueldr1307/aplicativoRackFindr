@@ -116,3 +116,27 @@ td .boton-estado + .boton-estado {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.resumen-usuarios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 0 0 2rem;
+}
+
+.tarjeta-resumen {
+  padding: 1rem 1.25rem;
+  background: var(--superficie, #10131a);
+  border: 1px solid var(--borde, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+}
+
+.tarjeta-resumen dt {
+  color: var(--texto-suave, #9aa0ac);
+}
+
+.tarjeta-resumen dd {
+  margin: 0.35rem 0 0;
+  color: var(--dorado-claro, #f0c27a);
+  font-size: 1.75rem;
+  font-weight: 700;
+}

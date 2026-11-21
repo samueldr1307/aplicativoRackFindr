@@ -2,6 +2,31 @@
   <h1>Panel de Administración</h1>
 
   <section aria-labelledby="titulo-usuarios">
+    <section aria-labelledby="titulo-resumen">
+      <h2 id="titulo-resumen">Resumen de usuarios</h2>
+
+      <dl class="resumen-usuarios">
+        <div class="tarjeta-resumen">
+          <dt>Usuarios totales</dt>
+          <dd>{{ usuarios.length }}</dd>
+        </div>
+
+        <div class="tarjeta-resumen">
+          <dt>Activos</dt>
+          <dd>{{ totalActivos }}</dd>
+        </div>
+
+        <div class="tarjeta-resumen">
+          <dt>Inactivos</dt>
+          <dd>{{ totalInactivos }}</dd>
+        </div>
+
+        <div class="tarjeta-resumen">
+          <dt>Administradores</dt>
+          <dd>{{ totalAdministradores }}</dd>
+        </div>
+      </dl>
+    </section>
     <h2 id="titulo-usuarios">Gestión de usuarios</h2>
     <p class="nota">Mostrando cuentas de ejemplo.</p>
     <label for="filtro-usuarios">Buscar por usuario o correo</label>
