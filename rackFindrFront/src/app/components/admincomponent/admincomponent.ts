@@ -65,6 +65,35 @@ export class Admincomponent implements OnInit {
 
   guardando = signal(false);
   errorOperacion = signal('');
+  descargandoReporte = signal(false);
+  errorReporte = signal('');
+
+  descargarPdf(tipo: 'usuarios' | 'estadisticas' | 'general') {
+    if (this.descargandoReporte()) return;
+
+    this.descargandoReporte.set(true);
+    this.errorReporte.set('');
+
+    this.api.descargarReporte(tipo).subscribe({
+      next: (archivo) => {
+        const url = URL.createObjectURL(archivo);
+        const enlace = document.createElement('a');
+
+        enlace.href = url;
+        enlace.download = `reporte_${tipo}_rackfindr.pdf`;
+        document.body.appendChild(enlace);
+        enlace.click();
+        enlace.remove();
+
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        this.descargandoReporte.set(false);
+      },
+      error: (error) => {
+        this.errorReporte.set(this.mensaje(error));
+        this.descargandoReporte.set(false);
+      },
+    });
+  }
 
   filtro = '';
   filtroUsuario = '';

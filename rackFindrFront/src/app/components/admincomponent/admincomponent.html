@@ -247,9 +247,11 @@
               } @empty {
                 <tr>
                   <td colspan="5" class="vacio">
-                    {{ usuarios().length
-                    ? 'Ninguna cuenta coincide con tu búsqueda.'
-                    : 'No hay cuentas registradas.' }}
+                    {{
+                      usuarios().length
+                        ? 'Ninguna cuenta coincide con tu búsqueda.'
+                        : 'No hay cuentas registradas.'
+                    }}
                   </td>
                 </tr>
               }
@@ -308,6 +310,46 @@
       />
 
       <div class="contenedor-tabla">
+        <section aria-labelledby="titulo-reportes">
+          <h2 id="titulo-reportes">Reportes PDF</h2>
+
+          <div class="acciones-edicion">
+            <button
+              type="button"
+              class="boton-estado"
+              (click)="descargarPdf('usuarios')"
+              [disabled]="descargandoReporte()"
+            >
+              Descargar reporte de usuarios
+            </button>
+
+            <button
+              type="button"
+              class="boton-estado"
+              (click)="descargarPdf('estadisticas')"
+              [disabled]="descargandoReporte()"
+            >
+              Descargar estadísticas
+            </button>
+
+            <button
+              type="button"
+              class="boton-estado"
+              (click)="descargarPdf('general')"
+              [disabled]="descargandoReporte()"
+            >
+              Descargar reporte general
+            </button>
+          </div>
+
+          @if (descargandoReporte()) {
+            <p role="status">Preparando el PDF…</p>
+          }
+
+          @if (errorReporte()) {
+            <p role="alert">{{ errorReporte() }}</p>
+          }
+        </section>
         <table aria-labelledby="titulo-auditoria">
           <thead>
           <tr>
@@ -330,9 +372,11 @@
             } @empty {
               <tr>
                 <td colspan="5" class="vacio">
-                  {{ auditorias().length
-                  ? 'Ningún registro coincide con los filtros.'
-                  : 'No hay registros de auditoría.' }}
+                  {{
+                    auditorias().length
+                      ? 'Ningún registro coincide con los filtros.'
+                      : 'No hay registros de auditoría.'
+                  }}
                 </td>
               </tr>
             }
