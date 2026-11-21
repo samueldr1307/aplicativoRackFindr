@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+import { Iniciocomponent } from './components/iniciocomponent/iniciocomponent';
 import { Busquedacomponent } from './components/busquedacomponent/busquedacomponent';
 import { Logincomponent } from './components/logincomponent/logincomponent';
 import { Registrocomponent } from './components/registrocomponent/registrocomponent';
@@ -9,7 +10,8 @@ import { Restablecercomponent } from './components/restablecercomponent/restable
 import { Instalacioncomponent } from './components/instalacioncomponent/instalacioncomponent';
 
 const routes: Routes = [
-  { path: '', component: Busquedacomponent, pathMatch: 'full' },
+  { path: '', component: Iniciocomponent, pathMatch: 'full' },
+  { path: 'buscar', component: Busquedacomponent },
   { path: 'login', component: Logincomponent },
   { path: 'registro', component: Registrocomponent },
   { path: 'recuperar-contrasena', component: Recuperarcomponent },

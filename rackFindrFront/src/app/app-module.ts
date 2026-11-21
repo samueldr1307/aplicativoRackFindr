@@ -13,6 +13,7 @@ import { Registrocomponent } from './components/registrocomponent/registrocompon
 import { Recuperarcomponent } from './components/recuperarcomponent/recuperarcomponent';
 import { Restablecercomponent } from './components/restablecercomponent/restablecercomponent';
 import { Instalacioncomponent } from './components/instalacioncomponent/instalacioncomponent';
+import { Iniciocomponent } from './components/iniciocomponent/iniciocomponent';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { Instalacioncomponent } from './components/instalacioncomponent/instalac
     Recuperarcomponent,
     Restablecercomponent,
     Instalacioncomponent,
+    Iniciocomponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [provideBrowserGlobalErrorListeners(), provideHttpClient()],
