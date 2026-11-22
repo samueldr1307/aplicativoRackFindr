@@ -37,8 +37,11 @@ export class Registrocomponent {
     this.enviando = true;
 
     this.authService.registrar(usuario, correo, this.password).subscribe({
-      next: (respuesta) => {
-        this.mensaje = respuesta;
+      next: () => {
+        this.mensaje =
+          'Tu cuenta fue creada y está pendiente de activación. ' +
+          'Revisa tu bandeja de entrada y la carpeta de spam. ' +
+          'Si no recibes el correo, contacta al administrador.';
         this.password = '';
         this.registrado = true;
         this.enviando = false;

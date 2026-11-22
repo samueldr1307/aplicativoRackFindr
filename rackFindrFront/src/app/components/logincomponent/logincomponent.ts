@@ -40,7 +40,7 @@ export class Logincomponent {
         this.authService.guardarSesion(respuesta.token, respuesta.role);
         this.password = '';
         this.cargando = false;
-        void this.router.navigateByUrl('/');
+        void this.router.navigateByUrl(this.authService.esAdmin() ? '/admin' : '/buscar');
       },
       error: (error) => {
         if (error.status === 0) {

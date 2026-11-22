@@ -36,9 +36,23 @@ export class Admincomponent implements OnInit {
         dias.set(dia, (dias.get(dia) ?? 0) + 1);
       }
     }
+    const nombresAcciones: Record<string, string> = {
+      LOGIN_EXITOSO: 'Inicio de sesión exitoso',
+      LOGIN_CUENTA_NO_CONFIRMADA: 'Intento de ingreso con cuenta sin confirmar',
+      BUSQUEDA_LIBRERIAS: 'Búsqueda de librerías',
+      REGISTRO_USUARIO: 'Registro de usuario',
+    };
 
+    const graficaAcciones = this.prepararGrafica('Acciones registradas por tipo', acciones);
+
+    for (const fila of graficaAcciones.filas) {
+      const codigo = fila.etiqueta;
+      fila.etiqueta =
+        nombresAcciones[codigo] ??
+        codigo.charAt(0).toUpperCase() + codigo.slice(1).toLowerCase().replace(/_/g, ' ');
+    }
     return [
-      this.prepararGrafica('Acciones registradas por tipo', acciones),
+      graficaAcciones,
       this.prepararGrafica('Búsquedas por usuario', busquedas),
       this.prepararGrafica('Uso por día', dias, true),
     ];

@@ -273,7 +273,7 @@
           <figcaption>{{ grafica.titulo }}</figcaption>
 
           @if (grafica.filas.length > 0) {
-            <ul>
+            <ul class="lista-auditoria">
               @for (fila of grafica.filas; track fila.etiqueta) {
                 <li>
                   <span>{{ fila.etiqueta }}</span>
