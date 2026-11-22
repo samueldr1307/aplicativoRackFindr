@@ -60,7 +60,7 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 
 	@Override
 	public boolean exist(Long id) {
-		return solicitudRepo.existsById(id) ? true : false;
+		return solicitudRepo.existsById(id);
 	}
 
 	@Override

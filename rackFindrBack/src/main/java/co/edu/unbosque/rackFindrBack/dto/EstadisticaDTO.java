@@ -124,7 +124,7 @@ public class EstadisticaDTO {
 	}
 
 	public void setSolicitudesPorUsuario(Map<String, Long> solicitudesPorUsuario) {
-		this.solicitudesPorUsuario = solicitudesPorUsuario;
+		this.solicitudesPorUsuario = new java.util.HashMap<>(solicitudesPorUsuario);
 	}
 
 	public Map<String, Long> getSolicitudesPorIa() {
@@ -132,7 +132,7 @@ public class EstadisticaDTO {
 	}
 
 	public void setSolicitudesPorIa(Map<String, Long> solicitudesPorIa) {
-		this.solicitudesPorIa = solicitudesPorIa;
+		this.solicitudesPorIa = solicitudesPorIa == null ? null : new java.util.HashMap<>(solicitudesPorIa);
 	}
 
 	public Map<String, Long> getAccionesAuditoria() {
@@ -140,7 +140,7 @@ public class EstadisticaDTO {
 	}
 
 	public void setAccionesAuditoria(Map<String, Long> accionesAuditoria) {
-		this.accionesAuditoria = accionesAuditoria;
+		this.accionesAuditoria = accionesAuditoria == null ? null : new java.util.HashMap<>(accionesAuditoria);
 	}
 
 	public List<AuditoriaSesionDTO> getUltimasAuditorias() {
@@ -148,7 +148,7 @@ public class EstadisticaDTO {
 	}
 
 	public void setUltimasAuditorias(List<AuditoriaSesionDTO> ultimasAuditorias) {
-		this.ultimasAuditorias = ultimasAuditorias;
+		this.ultimasAuditorias = ultimasAuditorias == null ? null : new java.util.ArrayList<>(ultimasAuditorias);
 	}
 
 }

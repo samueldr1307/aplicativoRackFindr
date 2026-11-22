@@ -54,7 +54,7 @@ public class AuditoriaSesionService implements CRUDOperation<AuditoriaSesionDTO>
 
 	@Override
 	public boolean exist(Long id) {
-		return auditoriaRepo.existsById(id) ? true : false;
+		return auditoriaRepo.existsById(id);
 	}
 
 	@Override
