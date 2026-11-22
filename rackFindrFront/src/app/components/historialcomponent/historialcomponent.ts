@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { BusquedaGuardada, HistorialService } from '../../services/historial.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-historialcomponent',
@@ -12,7 +13,10 @@ export class Historialcomponent implements OnInit {
   cargando = signal(false);
   error = signal('');
 
-  constructor(private historial: HistorialService) {}
+  constructor(
+    private historial: HistorialService,
+    readonly authService: AuthService,
+  ) {}
 
   ngOnInit() {
     this.cargar();
@@ -30,7 +34,7 @@ export class Historialcomponent implements OnInit {
     this.error.set('');
     this.cargando.set(true);
 
-    this.historial.consultar(token).subscribe({
+    this.historial.consultar(token, this.authService.esAdmin()).subscribe({
       next: (lista) => {
         this.busquedas.set(lista);
         this.cargando.set(false);

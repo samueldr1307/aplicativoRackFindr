@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { Iniciocomponent } from './components/iniciocomponent/iniciocomponent';
 import { Busquedacomponent } from './components/busquedacomponent/busquedacomponent';
 import { Logincomponent } from './components/logincomponent/logincomponent';
@@ -11,17 +10,18 @@ import {Historialcomponent} from './components/historialcomponent/historialcompo
 import { Instalacioncomponent } from './components/instalacioncomponent/instalacioncomponent';
 import {Admincomponent} from './components/admincomponent/admincomponent';
 import {adminGuard} from './guards/admin.guard';
+import { sesionGuard } from './guards/sesion.guard';
 
 const routes: Routes = [
   { path: '', component: Iniciocomponent, pathMatch: 'full' },
-  { path: 'buscar', component: Busquedacomponent },
+  { path: 'buscar', component: Busquedacomponent, canActivate: [sesionGuard] },
   { path: 'login', component: Logincomponent },
   { path: 'registro', component: Registrocomponent },
   { path: 'recuperar-contrasena', component: Recuperarcomponent },
   { path: 'restablecer-contrasena', component: Restablecercomponent },
-  {path: 'historial', component: Historialcomponent },
+  { path: 'historial', component: Historialcomponent, canActivate: [sesionGuard] },
   { path: 'instalacion', component: Instalacioncomponent },
-  {path: 'admin', component: Admincomponent, canActivate: [adminGuard] },
+  { path: 'admin', component: Admincomponent, canActivate: [adminGuard] },
 ];
 
 @NgModule({
