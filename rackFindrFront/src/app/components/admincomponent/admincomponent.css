@@ -200,3 +200,33 @@ td .boton-estado + .boton-estado {
 .segmento-maven {
   background: var(--dorado, #d4a24c);
 }
+.lista-auditoria {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.lista-auditoria li {
+  display: grid;
+  grid-template-columns: minmax(0, 18rem) minmax(0, 14rem) max-content;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lista-auditoria meter {
+  width: 100%;
+}
+
+.lista-auditoria strong {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 600px) {
+  .lista-auditoria li {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 5rem) max-content;
+    gap: 0.5rem;
+  }
+}
