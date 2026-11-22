@@ -69,6 +69,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 		}
 	}
 
+	private static final Random REGISTRATION_RANDOM = new Random();
 	public int registrarUsuarioConConfirmacion(UserDTO data) {
 		User entity = modelMapper.map(data, User.class);
 		if (findUsernameAlreadyTaken(entity)) {
@@ -83,6 +84,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 
 		entity.setEnabled(false);
 
+		int numero = 100000 + REGISTRATION_RANDOM.nextInt(900000);
 		int numero = 100000 + ThreadLocalRandom.current().nextInt(900000);
 		String codigo = String.valueOf(numero);
 		entity.setCodigoVerificacion(AESUtil.encrypt(codigo));
@@ -243,6 +245,8 @@ public class UserService implements CRUDOperation<UserDTO> {
 			return 2;
 		}
 
+		Random random = java.util.concurrent.ThreadLocalRandom.current();
+		int numero = 100000 + random.nextInt(900000);
 		int numero = 100000 + RECOVERY_CODE_RANDOM.nextInt(900000);
 		String codigoRecuperacion = String.valueOf(numero);
 		user.setCodigoRecuperacion(AESUtil.encrypt(codigoRecuperacion));
