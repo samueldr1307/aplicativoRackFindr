@@ -8,8 +8,12 @@
   <p class="texto">Busca librerías de npm y dependencias de Maven en un solo lugar.</p>
 
   <div class="botones">
-    <a class="botondorado" routerLink="/registro">Crear cuenta</a>
-    <a class="botonborde" routerLink="/login">Iniciar sesión</a>
+    @if (authService.haySesion()) {
+      <a class="botondorado" routerLink="/buscar">Buscar librerías</a>
+    } @else {
+      <a class="botondorado" routerLink="/registro">Crear cuenta</a>
+      <a class="botonborde" routerLink="/login">Iniciar sesión</a>
+    }
   </div>
 </section>
 
@@ -28,15 +32,13 @@
 <section class="seccion">
   <h2 class="encabezado">Cómo funciona</h2>
   <ol class="pasos">
-    @for (p of pasos; track p; let i = $index) {
-      <li class="paso">
-        <span class="numero">{{ i + 1 }}</span>
-        <span>{{ p }}</span>
-      </li>
+    @for (p of pasos; track p; let primero = $first) {
+      <li>{{ primero && authService.haySesion() ? 'Elige npm o Maven' : p }}</li>
     }
   </ol>
-</section>
 
+</section>
+@if (!authService.haySesion()) {
 <section class="seccion">
   <h2 class="encabezado">Así se ve el buscador</h2>
   <div class="vista">
@@ -59,6 +61,7 @@
     </div>
   </div>
 </section>
+}
 
 <section class="seccion">
   <div class="grupo">
@@ -72,7 +75,9 @@
   <a class="enlace" routerLink="/instalacion">¿Primera vez con npm? Lee la guía de instalación →</a>
 </section>
 
-<section class="final">
-  <h2 class="encabezado">Empieza a buscar hoy</h2>
-  <a class="botondorado" routerLink="/registro">Crear cuenta</a>
-</section>
+@if (!authService.haySesion()) {
+  <section class="final">
+    <h2 class="encabezado">Empieza a buscar hoy</h2>
+    <a class="botondorado" routerLink="/registro">Crear cuenta</a>
+  </section>
+}

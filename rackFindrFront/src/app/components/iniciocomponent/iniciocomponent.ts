@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, inject } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-iniciocomponent',
   standalone: false,
@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
   styleUrl: './iniciocomponent.css',
 })
 export class Iniciocomponent {
+  readonly authService = inject(AuthService);
   funciones = [
     { titulo: 'Buscar en npm', texto: 'Librerías para tus proyectos Angular.' },
     { titulo: 'Buscar en Maven', texto: 'Dependencias para tus proyectos Spring Boot.' },
