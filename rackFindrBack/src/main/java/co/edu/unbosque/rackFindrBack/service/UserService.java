@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 		}
 	}
 
+	private static final Random REGISTRATION_RANDOM = new Random();
 	public int registrarUsuarioConConfirmacion(UserDTO data) {
 		User entity = modelMapper.map(data, User.class);
 		if (findUsernameAlreadyTaken(entity)) {
@@ -82,7 +84,8 @@ public class UserService implements CRUDOperation<UserDTO> {
 
 		entity.setEnabled(false);
 
-		int numero = 100000 + new Random().nextInt(900000);
+		int numero = 100000 + REGISTRATION_RANDOM.nextInt(900000);
+		int numero = 100000 + ThreadLocalRandom.current().nextInt(900000);
 		String codigo = String.valueOf(numero);
 		entity.setCodigoVerificacion(AESUtil.encrypt(codigo));
 		entity.setFechaExpiracionCodigo(LocalDateTime.now().plusMinutes(30));
@@ -230,6 +233,7 @@ public class UserService implements CRUDOperation<UserDTO> {
 		return found.isPresent();
 	}
 
+	private static final Random RECOVERY_CODE_RANDOM = new Random();
 	public int solicitarRecuperacionContrasena(String usernameOrEmail) {
 		Optional<User> userOpt = buscarPorUsernameOCorreo(usernameOrEmail);
 		if (!userOpt.isPresent()) {
@@ -241,7 +245,9 @@ public class UserService implements CRUDOperation<UserDTO> {
 			return 2;
 		}
 
-		int numero = 100000 + new Random().nextInt(900000);
+		Random random = java.util.concurrent.ThreadLocalRandom.current();
+		int numero = 100000 + random.nextInt(900000);
+		int numero = 100000 + RECOVERY_CODE_RANDOM.nextInt(900000);
 		String codigoRecuperacion = String.valueOf(numero);
 		user.setCodigoRecuperacion(AESUtil.encrypt(codigoRecuperacion));
 		user.setFechaExpiracionCodigo(LocalDateTime.now().plusMinutes(15));
