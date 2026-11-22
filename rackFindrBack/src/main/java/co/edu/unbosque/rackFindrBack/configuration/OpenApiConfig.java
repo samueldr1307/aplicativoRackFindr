@@ -14,9 +14,27 @@ import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
+/**
+ * Configuración de OpenAPI 3 / Swagger UI para la documentación interactiva de los endpoints REST.
+ * Define metadatos de la API, esquema de autenticación Bearer JWT y respuestas HTTP estándar.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Configuration
 public class OpenApiConfig {
 
+	/**
+	 * Constructor por defecto de la configuración OpenAPI.
+	 */
+	public OpenApiConfig() {
+	}
+
+	/**
+	 * Construye y personaliza la especificación {@link OpenAPI} de la plataforma RackFindr.
+	 *
+	 * @return objeto {@link OpenAPI} con la información general y esquemas de seguridad JWT
+	 */
 	@Bean
 	public OpenAPI customOpenAPI() {
 		String mainDescription = "<h2>API REST RackFindr</h2>"

@@ -13,11 +13,32 @@ import co.edu.unbosque.rackFindrBack.model.User;
 import co.edu.unbosque.rackFindrBack.repository.UserRepository;
 import co.edu.unbosque.rackFindrBack.util.AESUtil;
 
+/**
+ * Clase de configuración encargada de precargar usuarios iniciales por defecto
+ * (administrador y usuario estándar) en la base de datos al iniciar la aplicación.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Configuration
 public class LoadDataBase {
 
 	private static final Logger log = LoggerFactory.getLogger(LoadDataBase.class);
 
+	/**
+	 * Constructor por defecto de la configuración de carga inicial.
+	 */
+	public LoadDataBase() {
+	}
+
+	/**
+	 * Ejecuta la verificación y creación de los usuarios semilla ({@code admin} y {@code normaluser})
+	 * si aún no existen en la base de datos.
+	 *
+	 * @param userRepo        repositorio de usuarios para consultar y persistir cuentas
+	 * @param passwordEncoder codificador BCrypt para cifrar las contraseñas iniciales
+	 * @return instancia de {@link CommandLineRunner} que se ejecuta al arranque
+	 */
 	@Bean
 	CommandLineRunner initDatabase(UserRepository userRepo, PasswordEncoder passwordEncoder) {
 		return args -> {

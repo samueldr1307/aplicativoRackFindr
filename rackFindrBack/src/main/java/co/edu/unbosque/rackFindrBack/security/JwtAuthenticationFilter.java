@@ -15,17 +15,40 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Filtro HTTP que intercepta cada petición entrante una única vez para extraer y validar
+ * el token JWT del encabezado {@code Authorization: Bearer <token>}.
+ * Si el token es válido, establece la autenticación del usuario en el {@link SecurityContextHolder}.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	private final JwtUtil jwtUtil;
 	private final UserDetailsService userDetailsService;
 
+	/**
+	 * Construye el filtro de autenticación JWT inyectando sus dependencias.
+	 *
+	 * @param jwtUtil            utilidad para validación y extracción de claims JWT
+	 * @param userDetailsService servicio para cargar los detalles del usuario desde la base de datos
+	 */
 	public JwtAuthenticationFilter(JwtUtil jwtUtil, UserDetailsService userDetailsService) {
 		this.jwtUtil = jwtUtil;
 		this.userDetailsService = userDetailsService;
 	}
 
+	/**
+	 * Procesa la solicitud HTTP verificando la presencia y validez del token JWT antes de continuar la cadena de filtros.
+	 *
+	 * @param request     solicitud HTTP entrante
+	 * @param response    respuesta HTTP saliente
+	 * @param filterChain cadena de filtros de seguridad
+	 * @throws ServletException si ocurre un error en el procesamiento del servlet
+	 * @throws IOException      si ocurre un error de entrada/salida
+	 */
 	@Override
 	protected void doFilterInternal(
 			HttpServletRequest request,

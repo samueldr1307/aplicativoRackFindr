@@ -5,6 +5,11 @@ import { AdminService, Auditoria, Estadisticas, UsuarioAdmin } from '../../servi
 
 type Seccion = 'usuarios' | 'estadisticas' | 'auditoria';
 
+/**
+ * Componente del panel de administración.
+ * Gestiona el CRUD de usuarios, visualización de estadísticas e indicadores en gráficas,
+ * consulta y filtrado de la bitácora de auditoría y exportación de reportes en formato PDF.
+ */
 @Component({
   selector: 'app-admincomponent',
   standalone: false,

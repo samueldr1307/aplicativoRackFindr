@@ -22,8 +22,23 @@ import co.edu.unbosque.rackFindrBack.dto.ResultadoDTO;
 import co.edu.unbosque.rackFindrBack.dto.SolicitudDTO;
 import co.edu.unbosque.rackFindrBack.dto.UserDTO;
 
+/**
+ * Clase utilitaria para la generación dinámica de reportes en formato PDF utilizando la librería OpenPDF.
+ * Permite exportar búsquedas individuales, historiales de usuario, listados de cuentas,
+ * estadísticas de uso y el reporte administrativo general.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class PdfGeneratorUtil {
 
+	/**
+	 * Genera un archivo PDF en memoria con el detalle de una solicitud individual y las recomendaciones
+	 * de las 3 Inteligencias Artificiales.
+	 *
+	 * @param sol DTO de la solicitud a exportar
+	 * @return arreglo de bytes correspondiente al documento PDF generado
+	 */
 	public static byte[] generarSolicitudIndividualPdf(SolicitudDTO sol) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Document document = new Document(PageSize.A4);

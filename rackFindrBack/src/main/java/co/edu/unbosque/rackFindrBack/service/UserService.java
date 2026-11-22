@@ -19,6 +19,14 @@ import co.edu.unbosque.rackFindrBack.repository.UserRepository;
 import co.edu.unbosque.rackFindrBack.util.AESUtil;
 import co.edu.unbosque.rackFindrBack.util.EmailSender;
 
+/**
+ * Servicio de negocio para la gestión integral de usuarios.
+ * Implementa el CRUD de cuentas, cifrado de contraseñas con BCrypt, cifrado de correos y códigos
+ * con AES-GCM, registro con confirmación por correo y recuperación de contraseña.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Service
 public class UserService implements CRUDOperation<UserDTO> {
 

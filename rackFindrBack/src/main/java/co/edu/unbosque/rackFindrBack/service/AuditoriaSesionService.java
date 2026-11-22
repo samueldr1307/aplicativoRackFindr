@@ -21,6 +21,14 @@ import co.edu.unbosque.rackFindrBack.repository.SolicitudRepository;
 import co.edu.unbosque.rackFindrBack.repository.UserRepository;
 import co.edu.unbosque.rackFindrBack.util.AESUtil;
 
+/**
+ * Servicio de negocio encargado de registrar y consultar eventos de auditoría de sesiones y acciones,
+ * resolviendo la geolocalización por dirección IP, cifrando datos sensibles con AES y calculando
+ * las estadísticas globales de la plataforma.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Service
 public class AuditoriaSesionService implements CRUDOperation<AuditoriaSesionDTO> {
 

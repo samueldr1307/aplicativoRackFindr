@@ -29,6 +29,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controlador REST para gestionar las solicitudes de recomendación de librerías (NPM y Maven)
+ * asistidas por las 3 Inteligencias Artificiales públicas, consulta de historial y exportación en PDF.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/solicitud")
 @CrossOrigin(originPatterns = "*")

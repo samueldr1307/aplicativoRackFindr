@@ -29,6 +29,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controlador REST para la administración CRUD de usuarios del sistema.
+ * Permite listar, crear, actualizar, activar/desactivar y eliminar cuentas de usuario,
+ * registrando cada operación en la bitácora de auditoría.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(originPatterns = "*")

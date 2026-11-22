@@ -12,6 +12,10 @@ import {Admincomponent} from './components/admincomponent/admincomponent';
 import {adminGuard} from './guards/admin.guard';
 import { sesionGuard } from './guards/sesion.guard';
 
+/**
+ * Definición de rutas de navegación de la aplicación RackFindr.
+ * Protege las vistas privadas mediante {@link sesionGuard} y el panel administrativo mediante {@link adminGuard}.
+ */
 const routes: Routes = [
   { path: '', component: Iniciocomponent, pathMatch: 'full' },
   { path: 'buscar', component: Busquedacomponent, canActivate: [sesionGuard] },

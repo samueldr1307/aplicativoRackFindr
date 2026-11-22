@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Objeto de Transferencia de Datos (DTO) para representar una solicitud de búsqueda de librerías,
+ * incluyendo el ecosistema ({@code npm} o {@code maven}), la consulta del usuario y la lista de resultados.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class SolicitudDTO {
 
 	private Long id;

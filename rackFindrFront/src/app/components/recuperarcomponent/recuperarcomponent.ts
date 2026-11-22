@@ -1,6 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
+/**
+ * Componente que permite solicitar el envío de un correo electrónico para recuperar la contraseña.
+ */
 @Component({
   selector: 'app-recuperarcomponent',
   standalone: false,

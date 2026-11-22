@@ -18,6 +18,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad JPA que representa a un usuario registrado en la tabla {@code useraccount}.
+ * Implementa {@link UserDetails} para integrarse con la autenticación y autorización de Spring Security.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Entity
 @Table(name = "useraccount")
 public class User implements UserDetails {

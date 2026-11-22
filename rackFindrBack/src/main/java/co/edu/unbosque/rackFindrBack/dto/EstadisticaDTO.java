@@ -3,6 +3,13 @@ package co.edu.unbosque.rackFindrBack.dto;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Objeto de Transferencia de Datos (DTO) que agrupa las métricas y estadísticas globales
+ * de uso de la plataforma RackFindr para el panel administrativo y reportes PDF.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class EstadisticaDTO {
 
 	private long totalUsuarios;

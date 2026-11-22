@@ -10,6 +10,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad JPA que representa un registro en la tabla {@code auditoria_sesion}.
+ * Almacena la trazabilidad de eventos del sistema (inicios de sesión, registros, búsquedas,
+ * exportaciones PDF y acciones administrativas) incluyendo IP y coordenadas cifradas con AES.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Entity
 @Table(name = "auditoria_sesion")
 public class AuditoriaSesion {

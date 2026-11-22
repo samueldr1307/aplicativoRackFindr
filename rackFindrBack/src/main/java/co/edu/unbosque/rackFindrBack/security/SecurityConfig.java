@@ -21,6 +21,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Configuración central de Spring Security para la aplicación.
+ * Define las políticas CORS, deshabilita CSRF para arquitectura REST stateless,
+ * establece las reglas de autorización por rol ({@code USER}, {@code ADMIN}) y registra el filtro JWT.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -28,11 +36,25 @@ public class SecurityConfig {
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final UserDetailsService userDetailsService;
 
+	/**
+	 * Construye la configuración de seguridad inyectando el filtro JWT y el servicio de usuarios.
+	 *
+	 * @param jwtAuthFilter      filtro de autenticación JWT por petición
+	 * @param userDetailsService servicio de carga de usuarios
+	 */
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, UserDetailsService userDetailsService) {
 		this.jwtAuthFilter = jwtAuthFilter;
 		this.userDetailsService = userDetailsService;
 	}
 
+	/**
+	 * Configura la cadena de filtros de seguridad HTTP ({@link SecurityFilterChain}),
+	 * los permisos por ruta y la gestión de sesiones sin estado ({@code STATELESS}).
+	 *
+	 * @param http objeto {@link HttpSecurity} para construir las reglas de seguridad
+	 * @return cadena de filtros {@link SecurityFilterChain} construida
+	 * @throws Exception si ocurre un error al configurar la seguridad HTTP
+	 */
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.cors(Customizer.withDefaults())

@@ -8,6 +8,9 @@ interface Paso {
   nota?: string;
 }
 
+/**
+ * Componente que presenta una guía visual paso a paso para configurar y ejecutar el proyecto en el entorno local.
+ */
 @Component({
   selector: 'app-instalacioncomponent',
   standalone: false,
