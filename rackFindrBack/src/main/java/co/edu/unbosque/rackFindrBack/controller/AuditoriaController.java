@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/auditoria")
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "http://localhost:8081", "*" })
+@CrossOrigin(originPatterns = "*")
 @Transactional
 @Tag(name = "Auditoría de Sesiones", description = "Endpoints para consultar auditoría de inicios de sesión (fechas, IP y coordenadas)")
 @SecurityRequirement(name = "bearerAuth")

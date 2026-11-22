@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/solicitud")
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "http://localhost:8081", "*" })
+@CrossOrigin(originPatterns = "*")
 @Transactional
 @Tag(name = "Solicitudes e IA", description = "Endpoints para consultar las 3 IAs públicas (NPM y Maven), historial y exportación PDF")
 @SecurityRequirement(name = "bearerAuth")

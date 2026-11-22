@@ -30,7 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/admin")
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "http://localhost:8081", "*" })
+@CrossOrigin(originPatterns = "*")
 @Transactional
 @Tag(name = "Panel Administrativo", description = "Endpoints administrativos para estadísticas y reportes en PDF")
 @SecurityRequirement(name = "bearerAuth")

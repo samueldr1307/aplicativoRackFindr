@@ -5,6 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Component
 public class EmailSender {
@@ -14,6 +19,12 @@ public class EmailSender {
 
 	@Value("${spring.mail.username:tu_correo@gmail.com}")
 	private String fromEmail;
+
+	@Value("${app.backend.url:https://gpcueb.org/rackFindrBack-0.0.2}")
+	private String backendUrl;
+
+	@Value("${app.frontend.url:http://localhost:4200}")
+	private String frontendUrl;
 
 	public EmailSender() {
 	}
@@ -36,8 +47,43 @@ public class EmailSender {
 		}
 	}
 
+	private String resolverBackendUrl() {
+		try {
+			ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+			if (attrs != null) {
+				HttpServletRequest request = attrs.getRequest();
+				String contextPath = request.getContextPath() != null ? request.getContextPath() : "";
+				String currentUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+				if (!contextPath.isEmpty() && (currentUrl.contains("localhost") || currentUrl.contains("127.0.0.1"))) {
+					return "https://gpcueb.org" + contextPath;
+				}
+				return currentUrl;
+			}
+		} catch (Exception e) {
+			// Usar fallback configurado
+		}
+		return backendUrl;
+	}
+
+	private String resolverFrontendUrl() {
+		try {
+			ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+			if (attrs != null) {
+				HttpServletRequest request = attrs.getRequest();
+				String origin = request.getHeader("Origin");
+				if (origin != null && !origin.isEmpty() && !"null".equalsIgnoreCase(origin)) {
+					return origin.endsWith("/") ? origin.substring(0, origin.length() - 1) : origin;
+				}
+			}
+		} catch (Exception e) {
+			// Ignorar y usar fallback configurado
+		}
+		return frontendUrl;
+	}
+
 	public boolean enviarConfirmacionRegistro(String to, String username, String codigoVerificacion) {
-		String enlace = "http://localhost:8080/auth/confirmar-cuenta?username=" + username + "&codigo="
+		String baseBackUrl = resolverBackendUrl();
+		String enlace = baseBackUrl + "/auth/confirmar-cuenta?username=" + username + "&codigo="
 				+ codigoVerificacion;
 		String subject = "Confirma tu cuenta en RackFindr";
 		String body = "Hola " + username + ",\n\n"
@@ -49,7 +95,8 @@ public class EmailSender {
 	}
 
 	public boolean enviarRecuperacionContrasena(String to, String username, String codigoRecuperacion) {
-		String enlaceFront = "http://localhost:4200/restablecer-contrasena?username=" + username + "&codigo="
+		String baseFrontUrl = resolverFrontendUrl();
+		String enlaceFront = baseFrontUrl + "/restablecer-contrasena?username=" + username + "&codigo="
 				+ codigoRecuperacion;
 		String subject = "Recuperacion de contrasena - RackFindr";
 		String body = "Hola " + username + ",\n\n"
