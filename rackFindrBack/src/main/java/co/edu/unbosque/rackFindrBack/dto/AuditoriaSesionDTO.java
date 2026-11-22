@@ -2,6 +2,12 @@ package co.edu.unbosque.rackFindrBack.dto;
 
 import java.time.LocalDateTime;
 
+/**
+ * Objeto de Transferencia de Datos (DTO) para los registros de auditoría de sesiones y acciones del sistema.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class AuditoriaSesionDTO {
 
 	private Long id;

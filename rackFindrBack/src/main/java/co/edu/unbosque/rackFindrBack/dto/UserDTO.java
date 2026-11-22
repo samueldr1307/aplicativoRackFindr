@@ -4,6 +4,13 @@ import java.util.Objects;
 
 import co.edu.unbosque.rackFindrBack.model.User.Role;
 
+/**
+ * Objeto de Transferencia de Datos (DTO) que representa la información de una cuenta de usuario
+ * para operaciones de autenticación, registro y administración.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class UserDTO {
 
 	private Long id;

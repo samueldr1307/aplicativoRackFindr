@@ -17,6 +17,10 @@ import { Instalacioncomponent } from './components/instalacioncomponent/instalac
 import { Admincomponent } from './components/admincomponent/admincomponent';
 import { Iniciocomponent } from './components/iniciocomponent/iniciocomponent';
 
+/**
+ * Módulo raíz de Angular que declara todos los componentes de la interfaz de usuario,
+ * importa los módulos de formularios y enrutamiento, y provee el cliente HTTP.
+ */
 @NgModule({
   declarations: [
     App,

@@ -16,12 +16,30 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+/**
+ * Clase utilitaria para el cifrado y descifrado simétrico de datos sensibles
+ * utilizando el algoritmo {@code AES/GCM/NoPadding} con codificación Base64,
+ * además de funciones de hashing criptográfico (MD5, SHA-1, SHA-256, SHA-384, SHA-512).
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class AESUtil {
 
+	/** Algoritmo base de cifrado simétrico. */
 	private final static String ALGORITMO = "AES";
 
+	/** Modo de operación y relleno del cifrado AES. */
 	private final static String TIPOCIFRADO = "AES/GCM/NoPadding";
 
+	/**
+	 * Cifra un texto plano utilizando AES-GCM con una llave y vector de inicialización (IV) específicos.
+	 *
+	 * @param llave llave secreta de 16 bytes
+	 * @param iv    vector de inicialización
+	 * @param texto texto en claro que se desea cifrar
+	 * @return texto cifrado codificado en Base64, o {@code null} si la entrada es {@code null}
+	 */
 	public static String encrypt(String llave, String iv, String texto) {
 		if (texto == null) {
 			return null;

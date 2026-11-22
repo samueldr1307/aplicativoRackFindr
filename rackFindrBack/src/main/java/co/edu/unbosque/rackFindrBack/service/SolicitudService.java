@@ -22,6 +22,14 @@ import co.edu.unbosque.rackFindrBack.repository.UserRepository;
 import co.edu.unbosque.rackFindrBack.util.AESUtil;
 import co.edu.unbosque.rackFindrBack.util.PdfGeneratorUtil;
 
+/**
+ * Servicio de negocio que gestiona el procesamiento de solicitudes de búsqueda de librerías,
+ * el almacenamiento cifrado de prompts y respuestas de las 3 IAs, la consulta de historiales
+ * y la exportación de reportes de búsquedas en PDF.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Service
 public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 
@@ -52,7 +60,7 @@ public class SolicitudService implements CRUDOperation<SolicitudDTO> {
 
 	@Override
 	public boolean exist(Long id) {
-		return solicitudRepo.existsById(id) ? true : false;
+		return solicitudRepo.existsById(id);
 	}
 
 	@Override

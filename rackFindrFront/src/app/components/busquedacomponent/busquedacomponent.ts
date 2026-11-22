@@ -8,6 +8,10 @@ interface RespuestaIA {
   error: string;
 }
 
+/**
+ * Componente principal de búsqueda de librerías para los ecosistemas NPM (Angular) y Maven (Spring Boot).
+ * Agrupa y presenta comparativamente las recomendaciones provenientes de Gemini, OpenAI y Llama.
+ */
 @Component({
   selector: 'app-busquedacomponent',
   standalone: false,

@@ -2,6 +2,10 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import {Router} from '@angular/router';
 
+/**
+ * Componente de inicio de sesión.
+ * Valida las credenciales del usuario contra el backend, almacena el token JWT y redirige según el rol.
+ */
 @Component({
   selector: 'app-logincomponent',
   standalone: false,

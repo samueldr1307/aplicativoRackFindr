@@ -13,6 +13,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+/**
+ * Entidad JPA que representa una solicitud o búsqueda de librerías en la tabla {@code solicitud}.
+ * Almacena el ecosistema consultado ({@code npm} o {@code maven}), el prompt cifrado,
+ * la respuesta consolidada de las 3 Inteligencias Artificiales y el usuario que realizó la consulta.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Entity
 @Table(name = "solicitud")
 public class Solicitud {

@@ -25,6 +25,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controlador REST responsable de los flujos públicos de autenticación y gestión de credenciales.
+ * Incluye inicio de sesión con generación de JWT, registro con confirmación por correo,
+ * activación de cuenta y recuperación/restablecimiento de contraseña.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/auth")
 @CrossOrigin(originPatterns = "*")

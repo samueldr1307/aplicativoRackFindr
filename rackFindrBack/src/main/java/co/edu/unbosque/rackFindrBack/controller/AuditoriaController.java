@@ -21,6 +21,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+/**
+ * Controlador REST para la consulta y gestión de registros de auditoría del sistema.
+ * Permite a los administradores auditar todos los eventos (IP, coordenadas, fecha, acción)
+ * y a los usuarios autenticados consultar sus propios registros.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/auditoria")
 @CrossOrigin(originPatterns = "*")

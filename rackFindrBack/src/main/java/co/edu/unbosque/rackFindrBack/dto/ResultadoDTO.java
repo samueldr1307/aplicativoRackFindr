@@ -2,6 +2,13 @@ package co.edu.unbosque.rackFindrBack.dto;
 
 import java.util.Objects;
 
+/**
+ * Objeto de Transferencia de Datos (DTO) que representa una recomendación individual de librería
+ * o dependencia generada por una de las Inteligencias Artificiales (Gemini, OpenAI o Llama).
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class ResultadoDTO {
 
 	private String nombre;

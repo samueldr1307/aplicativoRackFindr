@@ -1,0 +1,10 @@
+co.edu.unbosque.rackFindrBack
+co.edu.unbosque.rackFindrBack.configuration
+co.edu.unbosque.rackFindrBack.controller
+co.edu.unbosque.rackFindrBack.dto
+co.edu.unbosque.rackFindrBack.exception
+co.edu.unbosque.rackFindrBack.model
+co.edu.unbosque.rackFindrBack.repository
+co.edu.unbosque.rackFindrBack.security
+co.edu.unbosque.rackFindrBack.service
+co.edu.unbosque.rackFindrBack.util

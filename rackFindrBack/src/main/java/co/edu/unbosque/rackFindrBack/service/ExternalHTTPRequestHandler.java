@@ -22,6 +22,14 @@ import com.google.gson.JsonParser;
 
 import co.edu.unbosque.rackFindrBack.dto.ResultadoDTO;
 
+/**
+ * Manejador de peticiones HTTP externas mediante {@link HttpClient}.
+ * Se encarga de consultar simultáneamente las 3 Inteligencias Artificiales (Gemini, OpenAI y Llama/Pollinations)
+ * para recomendar librerías de NPM o Maven, así como de consultar la API externa de geolocalización por IP ({@code ip-api.com}).
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class ExternalHTTPRequestHandler {
 
 	private static final HttpClient HTTP_CLIENT = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2)

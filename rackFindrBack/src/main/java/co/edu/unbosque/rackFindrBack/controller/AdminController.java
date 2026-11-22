@@ -28,6 +28,14 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Controlador REST para el panel administrativo.
+ * Expone endpoints protegidos por el rol {@code ADMIN} para consultar estadísticas de uso
+ * de la plataforma y exportar reportes administrativos, de usuarios y de estadísticas en formato PDF.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @RestController
 @RequestMapping("/admin")
 @CrossOrigin(originPatterns = "*")

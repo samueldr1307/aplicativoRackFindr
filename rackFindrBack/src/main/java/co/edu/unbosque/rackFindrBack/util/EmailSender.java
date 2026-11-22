@@ -11,6 +11,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Componente utilitario encargado del envío de correos electrónicos transaccionales mediante SMTP
+ * utilizando {@link JavaMailSender}. Gestiona las notificaciones de confirmación de registro
+ * y recuperación de contraseña detectando dinámicamente las URLs de despliegue.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 @Component
 public class EmailSender {
 

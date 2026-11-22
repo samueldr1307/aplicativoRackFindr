@@ -2,6 +2,9 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import{ ActivatedRoute } from '@angular/router';
 import { AuthService} from '../../services/auth.service';
 
+/**
+ * Componente para restablecer la contraseña mediante el código de verificación recibido por correo electrónico.
+ */
 @Component({
   selector: 'app-restablecercomponent',
   standalone: false,

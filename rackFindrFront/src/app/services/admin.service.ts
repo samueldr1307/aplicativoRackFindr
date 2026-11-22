@@ -32,6 +32,11 @@ export interface Estadisticas {
   iniciosSesionFallidos: number;
 }
 
+/**
+ * Servicio encargado de las operaciones administrativas del sistema.
+ * Permite gestionar usuarios (CRUD y activación), consultar registros de auditoría,
+ * obtener estadísticas globales y descargar reportes en formato PDF adjuntando el token JWT.
+ */
 @Injectable({ providedIn: 'root' })
 export class AdminService {
   constructor(private http: HttpClient) {}

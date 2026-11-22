@@ -1,5 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+/**
+ * Componente de la página de bienvenida (Landing Page) de RackFindr.
+ * Presenta las funcionalidades principales, los pasos de uso y los ecosistemas soportados.
+ */
 @Component({
   selector: 'app-iniciocomponent',
   standalone: false,

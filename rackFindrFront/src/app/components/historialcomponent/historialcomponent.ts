@@ -2,6 +2,10 @@ import { Component, OnInit, signal } from '@angular/core';
 import { BusquedaGuardada, HistorialService } from '../../services/historial.service';
 import { AuthService } from '../../services/auth.service';
 
+/**
+ * Componente que muestra el historial cronológico de consultas realizadas por el usuario
+ * (o el historial general cuando se accede con una cuenta de administrador).
+ */
 @Component({
   selector: 'app-historialcomponent',
   standalone: false,

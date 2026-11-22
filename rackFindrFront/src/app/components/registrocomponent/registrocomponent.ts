@@ -1,6 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
+/**
+ * Componente de registro de nuevos usuarios con envío de correo de confirmación para activar la cuenta.
+ */
 @Component({
   selector: 'app-registrocomponent',
   standalone: false,

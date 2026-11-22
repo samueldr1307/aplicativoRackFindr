@@ -22,8 +22,30 @@ import co.edu.unbosque.rackFindrBack.dto.ResultadoDTO;
 import co.edu.unbosque.rackFindrBack.dto.SolicitudDTO;
 import co.edu.unbosque.rackFindrBack.dto.UserDTO;
 
+/**
+ * Clase utilitaria para la generación dinámica de reportes en formato PDF utilizando la librería OpenPDF.
+ * Permite exportar búsquedas individuales, historiales de usuario, listados de cuentas,
+ * estadísticas de uso y el reporte administrativo general.
+ *
+ * @author Equipo RackFindr - Universidad El Bosque
+ * @version 1.0
+ */
 public class PdfGeneratorUtil {
 
+	private static void agregarDetalleSolicitud(Document document, SolicitudDTO sol, Font normalFont, Font subtituloFont) throws com.lowagie.text.DocumentException {
+		document.add(new Paragraph("ID Solicitud: " + sol.getId(), normalFont));
+		document.add(new Paragraph("Usuario: " + (sol.getUsername() != null ? sol.getUsername() : ""), normalFont));
+		document.add(new Paragraph("Fecha: " + (sol.getFecha() != null ? sol.getFecha().toString() : ""), normalFont));
+		document.add(new Paragraph("Ecosistema: " + (sol.getEcosistema() != null ? sol.getEcosistema() : ""), normalFont));
+		document.add(new Paragraph("Solicitud (Prompt): " + (sol.getPrompt() != null ? sol.getPrompt() : ""), subtituloFont));
+	}
+	/**
+	 * Genera un archivo PDF en memoria con el detalle de una solicitud individual y las recomendaciones
+	 * de las 3 Inteligencias Artificiales.
+	 *
+	 * @param sol DTO de la solicitud a exportar
+	 * @return arreglo de bytes correspondiente al documento PDF generado
+	 */
 	public static byte[] generarSolicitudIndividualPdf(SolicitudDTO sol) {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		Document document = new Document(PageSize.A4);
@@ -43,11 +65,7 @@ public class PdfGeneratorUtil {
 			if (sol == null) {
 				document.add(new Paragraph("Solicitud no encontrada.", normalFont));
 			} else {
-				document.add(new Paragraph("ID Solicitud: " + sol.getId(), normalFont));
-				document.add(new Paragraph("Usuario: " + (sol.getUsername() != null ? sol.getUsername() : ""), normalFont));
-				document.add(new Paragraph("Fecha: " + (sol.getFecha() != null ? sol.getFecha().toString() : ""), normalFont));
-				document.add(new Paragraph("Ecosistema: " + (sol.getEcosistema() != null ? sol.getEcosistema() : ""), normalFont));
-				document.add(new Paragraph("Solicitud (Prompt): " + (sol.getPrompt() != null ? sol.getPrompt() : ""), subtituloFont));
+				agregarDetalleSolicitud(document, sol, normalFont, subtituloFont);
 				document.add(new Paragraph(" "));
 				document.add(new Paragraph("Respuestas de las 3 Inteligencias Artificiales:", subtituloFont));
 				document.add(new Paragraph(" "));
