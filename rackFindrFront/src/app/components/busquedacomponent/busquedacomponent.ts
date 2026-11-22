@@ -60,7 +60,15 @@ export class Busquedacomponent {
 
           grupo.recomendaciones.push(resultado);
         }
-
+        for (const nombreIA of ['Gemini', 'OpenAI', 'Llama']) {
+          if (!grupos.has(nombreIA)) {
+            grupos.set(nombreIA, {
+              nombreIA,
+              recomendaciones: [],
+              error: 'Sin recomendaciones disponibles para esta consulta.',
+            });
+          }
+        }
         this.respuestas = Array.from(grupos.values());
         this.buscado = true;
         this.cargando = false;
