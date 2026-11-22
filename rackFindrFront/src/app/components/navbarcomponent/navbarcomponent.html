@@ -11,14 +11,19 @@
       <a class="enlace" routerLink="/" routerLinkActive="activo"
          [routerLinkActiveOptions]="{ exact: true }">Inicio</a>
 
-      <a class="enlace" routerLink="/buscar" routerLinkActive="activo">Buscar</a>
+      @if (authService.haySesion()) {
+        <a class="enlace" routerLink="/buscar" routerLinkActive="activo">Buscar</a>
 
-      <a class="enlace" routerLink="/historial" routerLinkActive="activo">Historial</a>
+        <a class="enlace" routerLink="/historial" routerLinkActive="activo">
+          {{ authService.esAdmin() ? 'Historial general' : 'Mi historial' }}
+        </a>
+      }
       <a class="enlace" routerLink="/instalacion" routerLinkActive="activo">Instalación(npm)</a>
 
       @if (authService.esAdmin()) {
-        <a class="enlace" routerLink="/admin" routerLinkActive="activo">Admin</a>
-
+        <a class="enlace" routerLink="/admin" routerLinkActive="activo">
+          Panel de administrador
+        </a>
       }
       @if (authService.haySesion()) {
         <button type="button" class="boton-sesion" (click)="authService.cerrarSesion()">
