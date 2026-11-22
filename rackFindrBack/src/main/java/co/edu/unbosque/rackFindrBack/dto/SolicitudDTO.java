@@ -118,7 +118,7 @@ public class SolicitudDTO {
 	}
 
 	public void setResultados(List<ResultadoDTO> resultados) {
-		this.resultados = resultados;
+		this.resultados = resultados == null ? null : new java.util.ArrayList<>(resultados);
 	}
 
 	@Override
