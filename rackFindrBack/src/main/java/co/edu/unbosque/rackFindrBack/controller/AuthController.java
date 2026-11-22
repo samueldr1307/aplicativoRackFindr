@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "http://localhost:8081", "*" })
+@CrossOrigin(originPatterns = "*")
 @Tag(name = "Autenticación", description = "API para autenticación de usuarios (login, registro, confirmación de cuenta y recuperación)")
 public class AuthController {
 

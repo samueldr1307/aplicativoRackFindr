@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = { "http://localhost:4200", "http://localhost:8080", "http://localhost:8081", "*" })
+@CrossOrigin(originPatterns = "*")
 @Transactional
 @Tag(name = "Gestión de Usuarios", description = "Endpoints para administrar usuarios")
 @SecurityRequirement(name = "bearerAuth")
