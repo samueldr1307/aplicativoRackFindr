@@ -1,6 +1,7 @@
-import {Injectable,signal} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {URL_BACK } from './api';
+import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { URL_BACK } from './api';
+import { Router } from '@angular/router';
 
 interface RespuestaLogin {
   token: string;
@@ -11,7 +12,10 @@ interface RespuestaLogin {
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+  ) {}
 
   iniciarSesion(username: string, password: string) {
     return this.http.post<RespuestaLogin>(URL_BACK + '/auth/login', {
@@ -55,9 +59,10 @@ export class AuthService {
     const role = localStorage.getItem('role')?.trim().toUpperCase();
     return this.haySesion() && (role === 'ADMIN' || role === 'ROLE_ADMIN');
   }
-  cerrarSesion() {
+  cerrarSesion(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     this.haySesion.set(false);
+    void this.router.navigateByUrl('/', { replaceUrl: true });
   }
 }
