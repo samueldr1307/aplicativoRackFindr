@@ -1,23 +1,40 @@
 <section class="historial">
-  <h2 class="titulo">Historial de búsquedas</h2>
-
-  @if (cargando()) {
-    <p role="status">Cargando historial…</p>
-  } @else if (error()) {
-    <p role="alert">{{ error() }}</p>
-    <button type="button" (click)="cargar()">Reintentar</button>
+  @if (!authService.haySesion()) {
+    <h2 class="titulo">Historial de búsquedas</h2>
+    <p>Inicia sesión para consultar tu historial.</p>
+    <a class="enlace-buscar" routerLink="/login">Iniciar sesión</a>
   } @else {
-    @for (busqueda of busquedas(); track busqueda.id) {
-      <article class="busqueda">
-        <h3 class="consulta">{{ busqueda.consulta }}</h3>
-        <p class="detalle">
-          {{ busqueda.ecosistema }} · {{ busqueda.fecha | date:'dd/MM/yyyy HH:mm' }}
-        </p>
-      </article>
-    } @empty {
-      <p class="mensaje-vacio">Todavía no tienes búsquedas guardadas.</p>
-    }
-  }
+    <h2 class="titulo">
+      {{ authService.esAdmin() ? 'Historial general de búsquedas' : 'Mi historial de búsquedas' }}
+    </h2>
 
-  <a class="enlace-buscar" routerLink="/buscar">Buscar librerías</a>
+    @if (cargando()) {
+      <p role="status">Cargando historial…</p>
+    } @else if (error()) {
+      <p role="alert">{{ error() }}</p>
+      <button type="button" (click)="cargar()">Reintentar</button>
+    } @else {
+      @for (busqueda of busquedas(); track busqueda.id) {
+        <article class="busqueda">
+          <h3 class="consulta">{{ busqueda.consulta }}</h3>
+
+          @if (authService.esAdmin()) {
+            <p class="detalle">Usuario: {{ busqueda.username || 'Sin registrar' }}</p>
+          }
+
+          <p class="detalle">
+            {{ busqueda.ecosistema }} · {{ busqueda.fecha | date:'dd/MM/yyyy HH:mm' }}
+          </p>
+        </article>
+      } @empty {
+        <p class="mensaje-vacio">
+          {{ authService.esAdmin()
+          ? 'Todavía no hay búsquedas registradas.'
+          : 'Todavía no tienes búsquedas guardadas.' }}
+        </p>
+      }
+    }
+
+    <a class="enlace-buscar" routerLink="/buscar">Buscar librerías</a>
+  }
 </section>
