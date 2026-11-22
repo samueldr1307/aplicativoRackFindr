@@ -75,9 +75,7 @@
   <a class="enlace" routerLink="/instalacion">¿Primera vez con npm? Lee la guía de instalación →</a>
 </section>
 
-@if (!authService.haySesion()) {
-  <section class="final">
-    <h2 class="encabezado">Empieza a buscar hoy</h2>
-    <a class="botondorado" routerLink="/registro">Crear cuenta</a>
-  </section>
-}
+<section class="final" [hidden]="authService.haySesion()">
+  <h2 class="encabezado">Empieza a buscar hoy</h2>
+  <a class="botondorado" routerLink="/registro">Crear cuenta</a>
+</section>
